@@ -7,13 +7,13 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
 // TAB / PAGE NAVIGATION
 // ---------------------------------------------------
 const pageTitles = {
-    'pdf-to-csv-converter': 'Free Hindi PDF to CSV Converter Online | FileShift',
+    'pdf-to-csv-converter': 'Free PDF to CSV Converter Online | FileShift',
     'image-to-text-ocr': 'Free Image to Text Converter - OCR Online | FileShift',
     'jpg-to-png-converter': 'Free JPG to PNG Converter Online | FileShift'
 };
 
 const pageDescriptions = {
-    'pdf-to-csv-converter': 'Convert Hindi PDF to CSV online for free. Works with Kruti Dev, DevLys, Chanakya, Mangal fonts. OCR-based extraction, no uploads, runs in your browser.',
+    'pdf-to-csv-converter': 'Convert PDF to CSV online for free. OCR-based extraction supports all languages and fonts. No uploads, runs in your browser.',
     'image-to-text-ocr': 'Free online image to text converter with OCR. Extract text from images in 50+ languages including Hindi, English, Bengali, Tamil, Telugu. Download as .doc file.',
     'jpg-to-png-converter': 'Convert JPG to PNG online for free. Lossless quality, transparency support, batch conversion. No software needed, runs in your browser.'
 };
