@@ -1,4 +1,4 @@
-/* File Converter Tools - Main JS */
+﻿/* File Converter Tools - Main JS */
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -7,9 +7,9 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
 // TAB / PAGE NAVIGATION
 // ---------------------------------------------------
 const pageTitles = {
-    'pdf-to-csv-converter': 'Free PDF to CSV Converter Online | FileShift',
-    'image-to-text-ocr': 'Free Image to Text Converter - OCR Online | FileShift',
-    'jpg-to-png-converter': 'Free JPG to PNG Converter Online | FileShift'
+    'pdf-to-csv-converter': 'Free PDF to CSV Converter Online | FileFlipr',
+    'image-to-text-ocr': 'Free Image to Text Converter - OCR Online | FileFlipr',
+    'jpg-to-png-converter': 'Free JPG to PNG Converter Online | FileFlipr'
 };
 
 const pageDescriptions = {
@@ -60,7 +60,7 @@ document.querySelectorAll('.footer-tool-link').forEach(link => {
     });
 });
 
-// Handle direct URL hash (e.g. fileshift.tools/#image-to-text-ocr)
+// Handle direct URL hash (e.g. FileFlipr.tools/#image-to-text-ocr)
 window.addEventListener('DOMContentLoaded', () => {
     const hash = location.hash.replace('#', '');
     if (hash && document.getElementById(hash)) {
@@ -124,7 +124,7 @@ function setupDrop(zoneId, inputId, handler) {
 
 // ---------------------------------------------------
 // 1) PDF TO CSV (Hindi OCR approach)
-//    PDF → render pages as images → OCR with Hindi → CSV
+//    PDF â†’ render pages as images â†’ OCR with Hindi â†’ CSV
 // ---------------------------------------------------
 let csvData = '';
 
@@ -415,3 +415,4 @@ function resetJpg() {
     document.getElementById('jpg-results').innerHTML = '';
     hideProgress('jpg-progress-fill');
 }
+

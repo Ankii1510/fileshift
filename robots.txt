@@ -1,9 +1,10 @@
-User-agent: *
+﻿User-agent: *
 Allow: /
-Sitemap: https://fileshift.tools/sitemap.xml
+Sitemap: https://fileflipr.com/sitemap.xml
 
 User-agent: Googlebot
 Allow: /
 
 User-agent: Bingbot
 Allow: /
+
