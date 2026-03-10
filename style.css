@@ -28,11 +28,11 @@ button, a, input, select, textarea { -webkit-tap-highlight-color: rgba(0,0,0,0.0
 .nav-inner {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 10px 20px;
     display: flex;
     align-items: center;
-    height: 56px;
-    gap: 40px;
+    gap: 24px;
+    flex-wrap: wrap;
 }
 
 .logo {
@@ -51,9 +51,7 @@ button, a, input, select, textarea { -webkit-tap-highlight-color: rgba(0,0,0,0.0
     list-style: none;
     display: flex;
     gap: 4px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
+    flex-wrap: wrap;
     flex-shrink: 1;
     min-width: 0;
 }
