@@ -47,6 +47,14 @@ function switchTab(tabId) {
     }
     const page = document.getElementById(tabId);
     if (page) page.classList.add('active');
+
+    // Update dropdown toggle active state
+    document.querySelectorAll('.nav-dropdown-toggle').forEach(toggle => {
+        const dropdown = toggle.closest('.nav-dropdown');
+        const hasActive = dropdown && dropdown.querySelector('.nav-tool.active');
+        toggle.classList.toggle('has-active', !!hasActive);
+    });
+
     // Update page title & meta description for SEO
     if (pageTitles[tabId]) document.title = pageTitles[tabId];
     if (pageDescriptions[tabId]) {
@@ -55,13 +63,34 @@ function switchTab(tabId) {
     }
 }
 
+// Dropdown click-to-toggle for touch devices
+document.querySelectorAll('.nav-dropdown-toggle').forEach(toggle => {
+    toggle.addEventListener('click', e => {
+        e.stopPropagation();
+        const parent = toggle.closest('.nav-dropdown');
+        // Close other open dropdowns
+        document.querySelectorAll('.nav-dropdown.open').forEach(d => {
+            if (d !== parent) d.classList.remove('open');
+        });
+        parent.classList.toggle('open');
+    });
+});
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', () => {
+    document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+});
+
 document.querySelectorAll('.nav-tool').forEach(link => {
     link.addEventListener('click', e => {
         e.preventDefault();
         const tab = link.dataset.tab;
+        if (!tab) return; // skip dropdown toggles (they have no data-tab)
         switchTab(tab);
         history.pushState(null, '', '#' + tab);
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Close any open dropdown after selection
+        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
     });
 });
 
