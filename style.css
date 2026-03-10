@@ -10,6 +10,12 @@ body {
 
 a { text-decoration: none; color: inherit; }
 
+/* Prevent horizontal overflow on mobile */
+img, video, iframe, canvas { max-width: 100%; height: auto; }
+
+/* Ensure tap targets are accessible */
+button, a, input, select, textarea { -webkit-tap-highlight-color: rgba(0,0,0,0.05); }
+
 /* ========== NAVBAR ========== */
 .navbar {
     background: #fff;
@@ -248,6 +254,7 @@ a { text-decoration: none; color: inherit; }
     border-radius: 8px;
     margin-bottom: 16px;
     font-size: 0.88rem;
+    flex-wrap: wrap;
 }
 
 .file-info i { color: #888; }
@@ -256,6 +263,10 @@ a { text-decoration: none; color: inherit; }
     flex: 1;
     font-weight: 500;
     color: #222;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .file-info .file-size {
@@ -951,21 +962,107 @@ details p {
 .merge-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 
 /* ========== RESPONSIVE ========== */
+
+/* ------- Tablet & small desktop ------- */
+@media (max-width: 900px) {
+    .nav-inner { gap: 20px; }
+    .seo-details { padding: 0 16px; }
+}
+
+/* ------- Mobile ------- */
 @media (max-width: 700px) {
     .nav-inner {
         flex-direction: column;
         height: auto;
-        padding: 12px 16px;
+        padding: 10px 16px;
         gap: 8px;
     }
-    .nav-links { flex-wrap: wrap; gap: 4px; }
-    .nav-tool { padding: 6px 12px; font-size: 0.82rem; }
-    .dropdown-menu { left: auto; right: 0; min-width: 150px; }
-    .page-hero { padding: 32px 16px 28px; }
-    .page-hero h1 { font-size: 1.35rem; }
-    .tool-body { padding: 0 16px 40px; }
-    .upload-box { padding: 32px 16px; }
-    .steps-row { grid-template-columns: 1fr; }
+    .nav-links {
+        flex-wrap: wrap;
+        gap: 4px;
+        justify-content: center;
+        overflow-x: visible;
+    }
+    .nav-tool { padding: 7px 12px; font-size: 0.82rem; }
+
+    /* Dropdowns center-align on mobile */
+    .nav-dropdown { position: static; }
+    .dropdown-menu {
+        position: absolute;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        min-width: 180px;
+    }
+
+    .page-hero { padding: 28px 16px 24px; }
+    .page-hero h1 { font-size: 1.3rem; }
+    .page-hero p { font-size: 0.92rem; }
+
+    .tool-body { padding: 0 14px 36px; }
+    .upload-box { padding: 28px 14px; }
+    .upload-icon { font-size: 1.8rem; }
+    .upload-title { font-size: 0.95rem; }
+    .pick-btn { padding: 11px 20px; font-size: 0.88rem; min-height: 44px; }
+
+    .result-area { padding: 16px; }
+    .download-btn { padding: 12px 20px; font-size: 0.88rem; min-height: 44px; width: 100%; justify-content: center; }
+
+    .steps-row { grid-template-columns: 1fr; gap: 10px; }
+    .step-card { padding: 16px; }
+
     .ocr-grid { grid-template-columns: 1fr; }
+    .ocr-textarea { height: 220px; }
+
     .img-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+
+    .table-scroll { max-height: 300px; -webkit-overflow-scrolling: touch; }
+    .table-scroll th, .table-scroll td { padding: 6px 8px; font-size: 0.78rem; }
+
+    .seo-details { margin-top: 32px; padding: 0 4px; }
+    .seo-details h2 { font-size: 1.15rem; }
+    .seo-details h3 { font-size: 0.95rem; }
+    .seo-details p { font-size: 0.88rem; }
+
+    .faq-section h2 { font-size: 1.05rem; }
+    details summary { padding: 12px 14px; font-size: 0.88rem; }
+    details p { padding: 0 14px 12px; font-size: 0.85rem; }
+
+    .footer-links { gap: 10px; }
+    .footer-tool-link { font-size: 0.78rem; }
+
+    .font-picker, .lang-picker { padding: 14px 14px; }
+    .font-chip { padding: 7px 12px; font-size: 0.82rem; }
+    .lang-chip { padding: 5px 10px; font-size: 0.78rem; }
+
+    .merge-file-item { gap: 8px; padding: 8px 10px; }
+    .merge-file-name { font-size: 0.85rem; }
+    .merge-file-size { font-size: 0.78rem; }
+    .merge-actions { flex-direction: column; }
+    .merge-actions .pick-btn,
+    .merge-actions .download-btn { width: 100%; justify-content: center; text-align: center; min-height: 44px; }
+
+    .how-section { margin-top: 32px; margin-bottom: 24px; }
+
+    .text-preview-box { max-height: 300px; padding: 12px; font-size: 0.85rem; }
+    .word-preview-box { max-height: 350px; padding: 16px; font-size: 0.88rem; }
+}
+
+/* ------- Small phones ------- */
+@media (max-width: 400px) {
+    .nav-inner { padding: 8px 10px; }
+    .nav-tool { padding: 6px 9px; font-size: 0.75rem; }
+    .page-hero h1 { font-size: 1.15rem; }
+    .page-hero p { font-size: 0.85rem; }
+    .upload-box { padding: 24px 10px; }
+    .upload-title { font-size: 0.88rem; }
+    .upload-sub { font-size: 0.78rem; }
+    .pick-btn { padding: 10px 16px; font-size: 0.82rem; }
+    .result-area { padding: 12px; }
+    .tool-body { padding: 0 10px 30px; }
+    .footer-links { gap: 8px; }
+    .footer-tool-link { font-size: 0.72rem; }
+    .img-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+    .img-card img { height: 100px; }
+    .dropdown-menu { min-width: 150px; }
 }
