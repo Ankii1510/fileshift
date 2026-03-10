@@ -16,7 +16,8 @@ const pageTitles = {
     'word-to-pdf-converter': 'Free Word to PDF Converter Online | FileFlipr',
     'csv-to-excel-converter': 'Free CSV to Excel Converter Online | FileFlipr',
     'pdf-to-excel-converter': 'Free PDF to Excel Converter Online | FileFlipr',
-    'excel-to-pdf-converter': 'Free Excel to PDF Converter Online | FileFlipr'
+    'excel-to-pdf-converter': 'Free Excel to PDF Converter Online | FileFlipr',
+    'merge-pdf': 'Free Merge PDF Online - Combine PDFs | FileFlipr'
 };
 
 const pageDescriptions = {
@@ -29,7 +30,8 @@ const pageDescriptions = {
     'word-to-pdf-converter': 'Convert Word to PDF online for free. Upload .docx file and get a clean PDF document. Runs in your browser.',
     'csv-to-excel-converter': 'Convert CSV to Excel online for free. Upload CSV and download a proper .xlsx spreadsheet. Runs in your browser.',
     'pdf-to-excel-converter': 'Convert PDF to Excel online for free. Extract tables from PDF using OCR and download as .xlsx. Runs in your browser.',
-    'excel-to-pdf-converter': 'Convert Excel to PDF online for free. Upload .xlsx and get a clean PDF with formatted tables. Runs in your browser.'
+    'excel-to-pdf-converter': 'Convert Excel to PDF online for free. Upload .xlsx and get a clean PDF with formatted tables. Runs in your browser.',
+    'merge-pdf': 'Merge PDF files online for free. Combine multiple PDFs into one document. Reorder before merging. Runs in your browser.'
 };
 
 function switchTab(tabId) {
@@ -1165,3 +1167,136 @@ function resetE2p() {
     hideProgress('e2p-progress-fill');
 }
 
+// ---------------------------------------------------
+// 11) MERGE PDF
+// ---------------------------------------------------
+let mpdfFiles = [];
+let mpdfBlob = null;
+let mpdfDragIdx = null;
+
+setupDrop('mpdf-drop-zone', 'mpdf-input', files => addMpdfFiles(files));
+
+function addMpdfFiles(files) {
+    const pdfs = Array.from(files).filter(f => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'));
+    if (!pdfs.length) { alert('Please select PDF files.'); return; }
+    mpdfFiles.push(...pdfs);
+    renderMpdfList();
+}
+
+function renderMpdfList() {
+    const list = document.getElementById('mpdf-sortable');
+    const wrap = document.getElementById('mpdf-file-list');
+    const countEl = document.getElementById('mpdf-count');
+    list.innerHTML = '';
+
+    if (!mpdfFiles.length) {
+        wrap.classList.add('hidden');
+        return;
+    }
+    wrap.classList.remove('hidden');
+    countEl.textContent = `(${mpdfFiles.length} file${mpdfFiles.length > 1 ? 's' : ''})`;
+
+    mpdfFiles.forEach((f, i) => {
+        const li = document.createElement('li');
+        li.className = 'merge-file-item';
+        li.draggable = true;
+        li.dataset.index = i;
+
+        const grip = document.createElement('span');
+        grip.className = 'merge-grip';
+        grip.innerHTML = '<i class="fas fa-grip-vertical"></i>';
+
+        const name = document.createElement('span');
+        name.className = 'merge-file-name';
+        name.textContent = f.name;
+
+        const size = document.createElement('span');
+        size.className = 'merge-file-size';
+        size.textContent = (f.size / 1024).toFixed(1) + ' KB';
+
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'merge-remove-btn';
+        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        removeBtn.onclick = () => { mpdfFiles.splice(i, 1); renderMpdfList(); };
+
+        li.appendChild(grip);
+        li.appendChild(name);
+        li.appendChild(size);
+        li.appendChild(removeBtn);
+
+        // Drag events for reordering
+        li.addEventListener('dragstart', e => { mpdfDragIdx = i; li.classList.add('dragging'); });
+        li.addEventListener('dragend', () => { li.classList.remove('dragging'); mpdfDragIdx = null; });
+        li.addEventListener('dragover', e => { e.preventDefault(); li.classList.add('drag-over'); });
+        li.addEventListener('dragleave', () => { li.classList.remove('drag-over'); });
+        li.addEventListener('drop', e => {
+            e.preventDefault();
+            li.classList.remove('drag-over');
+            if (mpdfDragIdx !== null && mpdfDragIdx !== i) {
+                const moved = mpdfFiles.splice(mpdfDragIdx, 1)[0];
+                mpdfFiles.splice(i, 0, moved);
+                renderMpdfList();
+            }
+        });
+
+        list.appendChild(li);
+    });
+
+    // Hide result if list changed after a merge
+    document.getElementById('mpdf-result').classList.add('hidden');
+    mpdfBlob = null;
+}
+
+document.getElementById('mpdf-merge-btn').onclick = async () => {
+    if (mpdfFiles.length < 2) { alert('Please select at least 2 PDF files to merge.'); return; }
+
+    const { PDFDocument } = PDFLib;
+    progress('mpdf-progress-fill', 'mpdf-status', 5, 'Starting merge...');
+    document.getElementById('mpdf-result').classList.add('hidden');
+
+    try {
+        const merged = await PDFDocument.create();
+        let totalPages = 0;
+
+        for (let i = 0; i < mpdfFiles.length; i++) {
+            const pct = Math.round(10 + (i / mpdfFiles.length) * 80);
+            progress('mpdf-progress-fill', 'mpdf-status', pct, `Processing file ${i + 1} of ${mpdfFiles.length}...`);
+
+            const buf = await mpdfFiles[i].arrayBuffer();
+            const src = await PDFDocument.load(buf);
+            const pages = await merged.copyPages(src, src.getPageIndices());
+            pages.forEach(p => merged.addPage(p));
+            totalPages += pages.length;
+        }
+
+        progress('mpdf-progress-fill', 'mpdf-status', 95, 'Saving merged PDF...');
+        const pdfBytes = await merged.save();
+        mpdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+
+        progress('mpdf-progress-fill', 'mpdf-status', 100,
+            `Done - ${mpdfFiles.length} files merged, ${totalPages} total pages.`);
+
+        document.getElementById('mpdf-result-info').textContent =
+            `${mpdfFiles.length} PDFs combined into ${totalPages} pages (${(mpdfBlob.size / 1024).toFixed(1)} KB)`;
+        document.getElementById('mpdf-result').classList.remove('hidden');
+
+    } catch (err) {
+        console.error(err);
+        progress('mpdf-progress-fill', 'mpdf-status', 100, 'Something went wrong: ' + err.message);
+    }
+};
+
+document.getElementById('mpdf-download-btn').onclick = () => {
+    if (!mpdfBlob) return;
+    saveAs(mpdfBlob, 'merged.pdf');
+};
+
+function resetMpdf() {
+    mpdfFiles = [];
+    mpdfBlob = null;
+    document.getElementById('mpdf-input').value = '';
+    document.getElementById('mpdf-file-list').classList.add('hidden');
+    document.getElementById('mpdf-sortable').innerHTML = '';
+    document.getElementById('mpdf-result').classList.add('hidden');
+    hideProgress('mpdf-progress-fill');
+}

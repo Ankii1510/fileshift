@@ -1,7 +1,7 @@
 ﻿{
   "name": "FileFlipr",
   "short_name": "FileFlipr",
-  "description": "Free online file converter - PDF to CSV, Word, Excel. Image to Text OCR, JPG to PNG, and more",
+  "description": "Free online file converter - PDF to CSV, Word, Excel. Merge PDF. Image to Text OCR, JPG to PNG, and more",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
