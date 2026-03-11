@@ -959,6 +959,128 @@ details p {
 .merge-remove-btn:hover { background: #fde8e8; }
 .merge-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 
+/* ========== HOMEPAGE ========== */
+.homepage-hero {
+    text-align: center;
+    padding: 48px 20px 32px;
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+}
+.homepage-hero h1 {
+    font-size: 2rem;
+    color: #1a1a2e;
+    margin-bottom: 12px;
+}
+.homepage-hero p {
+    max-width: 640px;
+    margin: 0 auto;
+    color: #444;
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+.tools-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px 32px;
+}
+.tools-section h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 28px;
+    color: #222;
+}
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+.tool-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 20px 18px;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s;
+}
+.tool-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+    border-color: var(--card-color, #ddd);
+}
+.tool-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+.tool-card h3 {
+    font-size: 1rem;
+    margin-bottom: 4px;
+    color: #222;
+}
+.tool-card p {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+.homepage-seo {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 32px 20px;
+}
+.homepage-seo h2 {
+    font-size: 1.4rem;
+    margin-bottom: 14px;
+}
+.homepage-seo p, .homepage-seo li {
+    font-size: 0.92rem;
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 10px;
+}
+.homepage-seo ul {
+    padding-left: 20px;
+    margin-bottom: 16px;
+}
+
+.homepage-faq {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+}
+.homepage-faq h2 {
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+}
+.homepage-faq details {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background: #fff;
+}
+.homepage-faq summary {
+    padding: 12px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.92rem;
+}
+.homepage-faq details p {
+    padding: 0 16px 12px;
+    font-size: 0.88rem;
+    color: #555;
+    line-height: 1.6;
+}
+
 /* ========== RESPONSIVE ========== */
 
 /* ------- Tablet & small desktop ------- */
@@ -1044,6 +1166,14 @@ details p {
 
     .text-preview-box { max-height: 300px; padding: 12px; font-size: 0.85rem; }
     .word-preview-box { max-height: 350px; padding: 16px; font-size: 0.88rem; }
+
+    /* Homepage responsive */
+    .homepage-hero { padding: 32px 16px 24px; }
+    .homepage-hero h1 { font-size: 1.4rem; }
+    .homepage-hero p { font-size: 0.92rem; }
+    .tools-grid { grid-template-columns: 1fr; gap: 14px; }
+    .tools-section { padding: 28px 16px 24px; }
+    .tools-section h2 { font-size: 1.2rem; }
 }
 
 /* ------- Small phones ------- */
@@ -1063,4 +1193,11 @@ details p {
     .img-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
     .img-card img { height: 100px; }
     .dropdown-menu { min-width: 150px; }
+
+    /* Homepage responsive */
+    .homepage-hero h1 { font-size: 1.2rem; }
+    .tool-card { padding: 14px 12px; gap: 10px; }
+    .tool-card-icon { width: 38px; height: 38px; font-size: 1rem; }
+    .tool-card h3 { font-size: 0.9rem; }
+    .tool-card p { font-size: 0.8rem; }
 }

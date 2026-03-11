@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free PDF to JPG Converter Online - FileFlipr</title>
+    <meta name="description" content="Convert PDF to JPG online for free. Each page becomes a high-quality JPG image. Download individually or as ZIP. No signup, no upload to server.">
+    <meta name="keywords" content="pdf to jpg, pdf to jpg converter, convert pdf to jpg, pdf to image, pdf to jpg online free, pdf page to image">
+    <meta name="author" content="FileFlipr">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="canonical" href="https://fileflipr.com/pdf-to-jpg-converter.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fileflipr.com/pdf-to-jpg-converter.html">
+    <meta property="og:title" content="Free PDF to JPG Converter Online - FileFlipr">
+    <meta property="og:description" content="Convert PDF to JPG online for free. Each page becomes a high-quality JPG image.">
+    <meta property="og:image" content="https://fileflipr.com/og-image.png">
+    <meta property="og:site_name" content="FileFlipr">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free PDF to JPG Converter Online - FileFlipr">
+    <meta name="twitter:description" content="Convert PDF to JPG online for free. High-quality page rendering.">
+    <meta name="twitter:image" content="https://fileflipr.com/og-image.png">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://fileflipr.com/" },
+            { "@type": "ListItem", "position": 2, "name": "PDF to JPG Converter", "item": "https://fileflipr.com/pdf-to-jpg-converter.html" }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <nav class="navbar" aria-label="Main navigation"><div class="nav-inner"><a href="/" class="logo" aria-label="FileFlipr Home"><i class="fas fa-shuffle" aria-hidden="true"></i> FileFlipr</a><ul class="nav-links"><li><a href="pdf-to-csv-converter.html" class="nav-tool">PDF to CSV</a></li><li><a href="image-to-text-ocr.html" class="nav-tool">Image to Text OCR</a></li><li><a href="jpg-to-png-converter.html" class="nav-tool">JPG to PNG</a></li><li class="nav-dropdown"><span class="nav-tool nav-dropdown-toggle">PDF &amp; JPG <i class="fas fa-chevron-down dd-arrow"></i></span><ul class="dropdown-menu"><li><a href="pdf-to-jpg-converter.html" class="nav-tool">PDF to JPG</a></li><li><a href="jpg-to-pdf-converter.html" class="nav-tool">JPG to PDF</a></li></ul></li><li class="nav-dropdown"><span class="nav-tool nav-dropdown-toggle">PDF &amp; Word <i class="fas fa-chevron-down dd-arrow"></i></span><ul class="dropdown-menu"><li><a href="pdf-to-word-converter.html" class="nav-tool">PDF to Word</a></li><li><a href="word-to-pdf-converter.html" class="nav-tool">Word to PDF</a></li></ul></li><li class="nav-dropdown"><span class="nav-tool nav-dropdown-toggle">Excel Tools <i class="fas fa-chevron-down dd-arrow"></i></span><ul class="dropdown-menu"><li><a href="csv-to-excel-converter.html" class="nav-tool">CSV to Excel</a></li><li><a href="pdf-to-excel-converter.html" class="nav-tool">PDF to Excel</a></li><li><a href="excel-to-pdf-converter.html" class="nav-tool">Excel to PDF</a></li></ul></li><li><a href="merge-pdf.html" class="nav-tool">Merge PDF</a></li></ul></div></nav>
+
+    <main>
+    <section id="pdf-to-jpg-converter" class="page active" aria-label="Free PDF to JPG Converter Online">
+        <div class="page-hero" style="background:#fff8f0;">
+            <div class="hero-inner">
+                <div class="hero-icon" style="background:#e67e22;"><i class="fas fa-file-image"></i></div>
+                <h1>Free PDF to JPG Converter Online</h1>
+                <p><strong>Convert PDF to JPG</strong> online for free. Each page of your PDF becomes a high-quality JPG image. Download pages individually or grab them all as a ZIP. No upload to any server - everything runs in your browser.</p>
+            </div>
+        </div>
+        <div class="tool-body">
+            <div class="upload-box" id="p2j-drop-zone">
+                <input type="file" id="p2j-input" accept=".pdf" hidden>
+                <i class="fas fa-file-pdf upload-icon" style="color:#e67e22;" aria-hidden="true"></i>
+                <p class="upload-title">Drop your PDF file here</p>
+                <p class="upload-sub">or click anywhere in this box to browse</p>
+                <button class="pick-btn" style="background:#e67e22;" onclick="document.getElementById('p2j-input').click()">Select PDF File</button>
+            </div>
+            <div id="p2j-file-info" class="file-info hidden"></div>
+            <div id="p2j-progress" class="progress-wrap hidden">
+                <div class="pbar"><div class="pfill" id="p2j-progress-fill" style="background:#e67e22;"></div></div>
+                <p id="p2j-status" class="ptext">Processing...</p>
+            </div>
+            <div id="p2j-preview" class="result-area hidden">
+                <h3>Converted Pages</h3>
+                <div id="p2j-results" class="img-grid"></div>
+                <button class="download-btn" style="background:#e67e22;" id="p2j-download-all-btn"><i class="fas fa-download"></i> Download All (ZIP)</button>
+            </div>
+            <div class="how-section">
+                <h2>How it works</h2>
+                <div class="steps-row">
+                    <div class="step-card"><div class="step-num">1</div><h4>Upload your PDF</h4><p>Drag and drop a PDF or click to pick one from your device.</p></div>
+                    <div class="step-card"><div class="step-num">2</div><h4>Pages become images</h4><p>Each page is rendered as a high-quality JPG image right in your browser.</p></div>
+                    <div class="step-card"><div class="step-num">3</div><h4>Download</h4><p>Grab each page individually or download all pages as a ZIP file.</p></div>
+                </div>
+            </div>
+            <div class="seo-details">
+                <h2>Best Free Online PDF to JPG Converter</h2>
+                <p>FileFlipr's <strong>PDF to JPG converter</strong> turns every page of your PDF into a crisp <strong>JPG image</strong>. Whether you need to extract images from a presentation, share a document page as a photo, or create thumbnails of PDF pages - this tool handles it instantly.</p>
+                <h3>High-Quality Page Rendering</h3>
+                <p>Each PDF page is rendered at <strong>2x resolution</strong> for sharp, clear images. The output is perfect for presentations, social media, or any use where you need a PDF page as an image.</p>
+                <h3>Batch Download as ZIP</h3>
+                <p>If your PDF has multiple pages, download each one individually or get them all at once as a <strong>ZIP file</strong>. Fast and convenient for multi-page documents.</p>
+                <h3>Who Uses This Tool?</h3>
+                <ul class="seo-list">
+                    <li><strong>Students</strong> who need to share specific PDF pages as images</li>
+                    <li><strong>Professionals</strong> extracting charts and diagrams from PDF reports</li>
+                    <li><strong>Social media managers</strong> converting PDF flyers to shareable images</li>
+                    <li><strong>Anyone</strong> who needs a quick, free <strong>PDF to JPG converter online</strong></li>
+                </ul>
+                <h3>No Signup, No Upload, 100% Free</h3>
+                <p>Your PDF is processed entirely in your browser. Nothing is sent to any server. No signup, no watermark, completely <strong>free to use</strong>.</p>
+            </div>
+            <div class="faq-section">
+                <h2>Common questions</h2>
+                <details><summary>What quality are the JPG images?</summary><p>Each page is rendered at 2x scale for sharp output. The JPG quality is set to 92% for an excellent balance of quality and file size.</p></details>
+                <details><summary>Is there a page limit?</summary><p>No hard limit. Since rendering happens in your browser, very large PDFs (100+ pages) may take more time and memory.</p></details>
+                <details><summary>Is my file uploaded anywhere?</summary><p>No. Everything runs locally in your browser. Your PDF never leaves your device.</p></details>
+            </div>
+        </div>
+    </section>
+    </main>
+
+    <footer class="site-footer"><div class="footer-inner"><p><i class="fas fa-lock"></i> Your files stay on your device. Nothing is uploaded anywhere.</p><nav class="footer-links" aria-label="Footer tools"><a href="pdf-to-csv-converter.html" class="footer-tool-link">PDF to CSV Converter</a><a href="image-to-text-ocr.html" class="footer-tool-link">Image to Text OCR</a><a href="jpg-to-png-converter.html" class="footer-tool-link">JPG to PNG Converter</a><a href="pdf-to-jpg-converter.html" class="footer-tool-link">PDF to JPG</a><a href="jpg-to-pdf-converter.html" class="footer-tool-link">JPG to PDF</a><a href="pdf-to-word-converter.html" class="footer-tool-link">PDF to Word</a><a href="word-to-pdf-converter.html" class="footer-tool-link">Word to PDF</a><a href="csv-to-excel-converter.html" class="footer-tool-link">CSV to Excel</a><a href="pdf-to-excel-converter.html" class="footer-tool-link">PDF to Excel</a><a href="excel-to-pdf-converter.html" class="footer-tool-link">Excel to PDF</a><a href="merge-pdf.html" class="footer-tool-link">Merge PDF</a></nav><p class="footer-copy">&copy; 2026 FileFlipr. Free file conversion tools.</p></div></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

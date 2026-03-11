@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Merge PDF Online - Combine PDF Files - FileFlipr</title>
+    <meta name="description" content="Merge PDF files online for free. Combine multiple PDFs into one document. Drag to reorder pages. No signup, no upload to server - everything runs in your browser.">
+    <meta name="keywords" content="merge pdf, combine pdf, merge pdf online free, join pdf files, pdf merger, combine multiple pdfs, merge pdf files into one">
+    <meta name="author" content="FileFlipr">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="canonical" href="https://fileflipr.com/merge-pdf.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fileflipr.com/merge-pdf.html">
+    <meta property="og:title" content="Free Merge PDF Online - Combine PDF Files - FileFlipr">
+    <meta property="og:description" content="Merge PDF files online for free. Combine multiple PDFs into one document.">
+    <meta property="og:image" content="https://fileflipr.com/og-image.png">
+    <meta property="og:site_name" content="FileFlipr">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free Merge PDF Online - Combine PDF Files - FileFlipr">
+    <meta name="twitter:description" content="Merge PDF files online for free. Combine multiple PDFs into one document.">
+    <meta name="twitter:image" content="https://fileflipr.com/og-image.png">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script type="application/ld+json">
+    { "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://fileflipr.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Merge PDF", "item": "https://fileflipr.com/merge-pdf.html" }
+    ]}
+    </script>
+</head>
+<body>
+    <nav class="navbar" aria-label="Main navigation"><div class="nav-inner"><a href="/" class="logo" aria-label="FileFlipr Home"><i class="fas fa-shuffle" aria-hidden="true"></i> FileFlipr</a><ul class="nav-links"><li><a href="pdf-to-csv-converter.html" class="nav-tool">PDF to CSV</a></li><li><a href="image-to-text-ocr.html" class="nav-tool">Image to Text OCR</a></li><li><a href="jpg-to-png-converter.html" class="nav-tool">JPG to PNG</a></li><li class="nav-dropdown"><span class="nav-tool nav-dropdown-toggle">PDF &amp; JPG <i class="fas fa-chevron-down dd-arrow"></i></span><ul class="dropdown-menu"><li><a href="pdf-to-jpg-converter.html" class="nav-tool">PDF to JPG</a></li><li><a href="jpg-to-pdf-converter.html" class="nav-tool">JPG to PDF</a></li></ul></li><li class="nav-dropdown"><span class="nav-tool nav-dropdown-toggle">PDF &amp; Word <i class="fas fa-chevron-down dd-arrow"></i></span><ul class="dropdown-menu"><li><a href="pdf-to-word-converter.html" class="nav-tool">PDF to Word</a></li><li><a href="word-to-pdf-converter.html" class="nav-tool">Word to PDF</a></li></ul></li><li class="nav-dropdown"><span class="nav-tool nav-dropdown-toggle">Excel Tools <i class="fas fa-chevron-down dd-arrow"></i></span><ul class="dropdown-menu"><li><a href="csv-to-excel-converter.html" class="nav-tool">CSV to Excel</a></li><li><a href="pdf-to-excel-converter.html" class="nav-tool">PDF to Excel</a></li><li><a href="excel-to-pdf-converter.html" class="nav-tool">Excel to PDF</a></li></ul></li><li><a href="merge-pdf.html" class="nav-tool">Merge PDF</a></li></ul></div></nav>
+
+    <main>
+    <section id="merge-pdf" class="page active" aria-label="Free Merge PDF Online">
+        <div class="page-hero" style="background:#ebedef;"><div class="hero-inner"><div class="hero-icon" style="background:#2c3e50;"><i class="fas fa-object-group"></i></div><h1>Free Merge PDF Online</h1><p><strong>Merge PDF files</strong> online for free. Combine multiple PDFs into a single document. Drag to reorder files before merging. No signup, no upload to server.</p></div></div>
+        <div class="tool-body">
+            <div class="upload-box" id="mpdf-drop-zone"><input type="file" id="mpdf-input" accept=".pdf" multiple hidden><i class="fas fa-layer-group upload-icon" style="color:#2c3e50;" aria-hidden="true"></i><p class="upload-title">Drop your PDF files here</p><p class="upload-sub">Select multiple PDFs &bull; Drag to reorder</p><button class="pick-btn" style="background:#2c3e50;" onclick="document.getElementById('mpdf-input').click()">Select PDF Files</button></div>
+            <div id="mpdf-file-list" class="merge-file-list hidden"><h3>Selected Files <span id="mpdf-count"></span></h3><ul id="mpdf-sortable"></ul><button class="pick-btn" style="background:#7f8c8d;" onclick="document.getElementById('mpdf-input').click()"><i class="fas fa-plus"></i> Add More</button></div>
+            <div id="mpdf-progress" class="progress-wrap hidden"><div class="pbar"><div class="pfill" id="mpdf-progress-fill" style="background:#2c3e50;"></div></div><p id="mpdf-status" class="ptext">Merging...</p></div>
+            <button class="download-btn" id="mpdf-merge-btn" style="background:#2c3e50;display:none;margin:10px auto;"><i class="fas fa-object-group"></i> Merge PDFs</button>
+            <div id="mpdf-result" class="result-area hidden"><h3>Merged PDF Ready</h3><p id="mpdf-result-info"></p><button class="download-btn" style="background:#2c3e50;" id="mpdf-download-btn"><i class="fas fa-download"></i> Download Merged PDF</button></div>
+            <div class="how-section"><h2>How it works</h2><div class="steps-row"><div class="step-card"><div class="step-num">1</div><h4>Upload PDFs</h4><p>Select or drop multiple PDF files. You can add more files later too.</p></div><div class="step-card"><div class="step-num">2</div><h4>Reorder files</h4><p>Drag files to rearrange the order. Remove any files you don't need.</p></div><div class="step-card"><div class="step-num">3</div><h4>Download merged PDF</h4><p>Click merge and download the combined PDF with all pages intact.</p></div></div></div>
+            <div class="seo-details">
+                <h2>Combine Multiple PDFs Into One</h2>
+                <p>FileFlipr's <strong>PDF merger</strong> uses pdf-lib to combine multiple PDF files into a single document. All pages from each PDF are copied into the final file, preserving the original quality, links, and formatting.</p>
+                <h3>Features</h3>
+                <ul class="seo-list"><li><strong>Drag-and-drop reordering</strong> - arrange files in any order before merging</li><li><strong>No page limits</strong> - combine as many PDFs as you need</li><li><strong>Preserves quality</strong> - pages are copied, not re-rendered</li><li><strong>100% private</strong> - files never leave your browser</li></ul>
+            </div>
+            <div class="faq-section"><h2>Common questions</h2><details><summary>Is there a file size limit?</summary><p>There's no hard limit. Since everything runs in your browser, it depends on your device's memory. Most users can merge dozens of PDFs without issues.</p></details><details><summary>Does it preserve links and bookmarks?</summary><p>Yes, the tool copies pages directly so internal links, annotations, and formatting are preserved.</p></details><details><summary>Can I reorder pages within a PDF?</summary><p>Currently you can reorder entire files. Page-level reordering within a single PDF is planned for a future update.</p></details></div>
+        </div>
+    </section>
+    </main>
+
+    <footer class="site-footer"><div class="footer-inner"><p><i class="fas fa-lock"></i> Your files stay on your device. Nothing is uploaded anywhere.</p><nav class="footer-links" aria-label="Footer tools"><a href="pdf-to-csv-converter.html" class="footer-tool-link">PDF to CSV Converter</a><a href="image-to-text-ocr.html" class="footer-tool-link">Image to Text OCR</a><a href="jpg-to-png-converter.html" class="footer-tool-link">JPG to PNG Converter</a><a href="pdf-to-jpg-converter.html" class="footer-tool-link">PDF to JPG</a><a href="jpg-to-pdf-converter.html" class="footer-tool-link">JPG to PDF</a><a href="pdf-to-word-converter.html" class="footer-tool-link">PDF to Word</a><a href="word-to-pdf-converter.html" class="footer-tool-link">Word to PDF</a><a href="csv-to-excel-converter.html" class="footer-tool-link">CSV to Excel</a><a href="pdf-to-excel-converter.html" class="footer-tool-link">PDF to Excel</a><a href="excel-to-pdf-converter.html" class="footer-tool-link">Excel to PDF</a><a href="merge-pdf.html" class="footer-tool-link">Merge PDF</a></nav><p class="footer-copy">&copy; 2026 FileFlipr. Free file conversion tools.</p></div></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

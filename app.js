@@ -1,121 +1,34 @@
-﻿/* File Converter Tools - Main JS */
-
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+﻿/* FileFlipr - Main JS (multi-page version) */
 
 // ---------------------------------------------------
-// TAB / PAGE NAVIGATION
+// NAVIGATION: Dropdown toggle & active link highlight
 // ---------------------------------------------------
-const pageTitles = {
-    'pdf-to-csv-converter': 'Free PDF to CSV Converter Online | FileFlipr',
-    'image-to-text-ocr': 'Free Image to Text Converter - OCR Online | FileFlipr',
-    'jpg-to-png-converter': 'Free JPG to PNG Converter Online | FileFlipr',
-    'pdf-to-jpg-converter': 'Free PDF to JPG Converter Online | FileFlipr',
-    'jpg-to-pdf-converter': 'Free JPG to PDF Converter Online | FileFlipr',
-    'pdf-to-word-converter': 'Free PDF to Word Converter Online | FileFlipr',
-    'word-to-pdf-converter': 'Free Word to PDF Converter Online | FileFlipr',
-    'csv-to-excel-converter': 'Free CSV to Excel Converter Online | FileFlipr',
-    'pdf-to-excel-converter': 'Free PDF to Excel Converter Online | FileFlipr',
-    'excel-to-pdf-converter': 'Free Excel to PDF Converter Online | FileFlipr',
-    'merge-pdf': 'Free Merge PDF Online - Combine PDFs | FileFlipr'
-};
-
-const pageDescriptions = {
-    'pdf-to-csv-converter': 'Convert PDF to CSV online for free. OCR-based extraction supports all languages and fonts. No uploads, runs in your browser.',
-    'image-to-text-ocr': 'Free online image to text converter with OCR. Extract text from images in 50+ languages including Hindi, English, Bengali, Tamil, Telugu. Download as .doc file.',
-    'jpg-to-png-converter': 'Convert JPG to PNG online for free. Lossless quality, transparency support, batch conversion. No software needed, runs in your browser.',
-    'pdf-to-jpg-converter': 'Convert PDF to JPG online for free. Each page becomes a high-quality JPG image. Download individually or as ZIP. Runs in your browser.',
-    'jpg-to-pdf-converter': 'Convert JPG to PDF online for free. Combine multiple JPG images into a single PDF document. No uploads, runs in your browser.',
-    'pdf-to-word-converter': 'Convert PDF to Word online for free. Extract text from PDF and download as editable .doc file. Runs in your browser.',
-    'word-to-pdf-converter': 'Convert Word to PDF online for free. Upload .docx file and get a clean PDF document. Runs in your browser.',
-    'csv-to-excel-converter': 'Convert CSV to Excel online for free. Upload CSV and download a proper .xlsx spreadsheet. Runs in your browser.',
-    'pdf-to-excel-converter': 'Convert PDF to Excel online for free. Extract tables from PDF using OCR and download as .xlsx. Runs in your browser.',
-    'excel-to-pdf-converter': 'Convert Excel to PDF online for free. Upload .xlsx and get a clean PDF with formatted tables. Runs in your browser.',
-    'merge-pdf': 'Merge PDF files online for free. Combine multiple PDFs into one document. Reorder before merging. Runs in your browser.'
-};
-
-function switchTab(tabId) {
-    document.querySelectorAll('.nav-tool').forEach(l => {
-        l.classList.remove('active');
-        l.setAttribute('aria-selected', 'false');
-    });
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    const activeLink = document.querySelector(`.nav-tool[data-tab="${tabId}"]`);
-    if (activeLink) {
-        activeLink.classList.add('active');
-        activeLink.setAttribute('aria-selected', 'true');
-    }
-    const page = document.getElementById(tabId);
-    if (page) page.classList.add('active');
-
-    // Update dropdown toggle active state
-    document.querySelectorAll('.nav-dropdown-toggle').forEach(toggle => {
-        const dropdown = toggle.closest('.nav-dropdown');
-        const hasActive = dropdown && dropdown.querySelector('.nav-tool.active');
-        toggle.classList.toggle('has-active', !!hasActive);
-    });
-
-    // Update page title & meta description for SEO
-    if (pageTitles[tabId]) document.title = pageTitles[tabId];
-    if (pageDescriptions[tabId]) {
-        const meta = document.querySelector('meta[name="description"]');
-        if (meta) meta.setAttribute('content', pageDescriptions[tabId]);
-    }
-}
-
-// Dropdown click-to-toggle for touch devices
 document.querySelectorAll('.nav-dropdown-toggle').forEach(toggle => {
     toggle.addEventListener('click', e => {
         e.stopPropagation();
         const parent = toggle.closest('.nav-dropdown');
-        // Close other open dropdowns
         document.querySelectorAll('.nav-dropdown.open').forEach(d => {
             if (d !== parent) d.classList.remove('open');
         });
         parent.classList.toggle('open');
     });
 });
-
-// Close dropdowns when clicking outside
 document.addEventListener('click', () => {
     document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
 });
 
-document.querySelectorAll('.nav-tool').forEach(link => {
-    link.addEventListener('click', e => {
-        e.preventDefault();
-        const tab = link.dataset.tab;
-        if (!tab) return; // skip dropdown toggles (they have no data-tab)
-        switchTab(tab);
-        history.pushState(null, '', '#' + tab);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        // Close any open dropdown after selection
-        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+// Highlight active nav link based on current page
+(function () {
+    const page = location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('.nav-links a.nav-tool').forEach(a => {
+        const href = a.getAttribute('href');
+        if (href === page) {
+            a.classList.add('active');
+            const dd = a.closest('.nav-dropdown');
+            if (dd) dd.querySelector('.nav-dropdown-toggle').classList.add('has-active');
+        }
     });
-});
-
-// Footer tool links
-document.querySelectorAll('.footer-tool-link').forEach(link => {
-    link.addEventListener('click', e => {
-        e.preventDefault();
-        const tab = link.dataset.tab;
-        switchTab(tab);
-        history.pushState(null, '', '#' + tab);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-});
-
-// Handle direct URL hash (e.g. fileflipr.com/#image-to-text-ocr)
-window.addEventListener('DOMContentLoaded', () => {
-    const hash = location.hash.replace('#', '');
-    if (hash && document.getElementById(hash)) {
-        switchTab(hash);
-    }
-});
-window.addEventListener('popstate', () => {
-    const hash = location.hash.replace('#', '');
-    if (hash && document.getElementById(hash)) switchTab(hash);
-});
+})();
 
 // ---------------------------------------------------
 // HELPERS
@@ -130,8 +43,6 @@ function formatBytes(b) {
 
 function showFileInfo(id, file, onRemove) {
     const el = document.getElementById(id);
-    const safeName = document.createElement('span');
-    safeName.textContent = file.name;
     el.innerHTML = '';
     const icon = document.createElement('i');
     icon.className = 'fas fa-file';
@@ -167,9 +78,9 @@ function hideProgress(fillId) {
 function setupDrop(zoneId, inputId, handler) {
     const zone = document.getElementById(zoneId);
     const inp = document.getElementById(inputId);
+    if (!zone || !inp) return;
 
     zone.addEventListener('click', e => { if (e.target.tagName !== 'BUTTON') inp.click(); });
-
     ['dragenter', 'dragover'].forEach(ev =>
         zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.add('dragover'); })
     );
@@ -179,477 +90,6 @@ function setupDrop(zoneId, inputId, handler) {
     zone.addEventListener('drop', e => { if (e.dataTransfer.files.length) handler(e.dataTransfer.files); });
     inp.addEventListener('change', () => { if (inp.files.length) handler(inp.files); });
 }
-
-// ---------------------------------------------------
-// 1) PDF TO CSV (Hindi OCR approach)
-//    PDF â†’ render pages as images â†’ OCR with Hindi â†’ CSV
-// ---------------------------------------------------
-let csvData = '';
-
-setupDrop('pdf-drop-zone', 'pdf-input', files => handlePdf(files[0]));
-
-async function handlePdf(file) {
-    if (!file || file.type !== 'application/pdf') { alert('Please pick a PDF file.'); return; }
-
-    showFileInfo('pdf-file-info', file, resetPdf);
-    progress('pdf-progress-fill', 'pdf-status', 5, 'Loading PDF...');
-    document.getElementById('pdf-preview').classList.add('hidden');
-
-    try {
-        const buf = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-        const total = pdf.numPages;
-        const allText = [];
-
-        for (let i = 1; i <= total; i++) {
-            // Step 1: Render PDF page to canvas image
-            progress('pdf-progress-fill', 'pdf-status',
-                Math.round((i / total) * 40),
-                `Rendering page ${i} of ${total} as image...`
-            );
-
-            const page = await pdf.getPage(i);
-            const scale = 2; // 2x for better OCR quality
-            const viewport = page.getViewport({ scale });
-            const canvas = document.createElement('canvas');
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-            const ctx = canvas.getContext('2d');
-
-            await page.render({ canvasContext: ctx, viewport }).promise;
-
-            // Step 2: Run OCR on the rendered image
-            progress('pdf-progress-fill', 'pdf-status',
-                40 + Math.round((i / total) * 50),
-                `OCR scanning page ${i} of ${total} (Hindi + English)...`
-            );
-
-            const imgData = canvas.toDataURL('image/png');
-            const result = await Tesseract.recognize(imgData, 'hin+eng', {
-                logger: m => {
-                    if (m.status === 'recognizing text') {
-                        const pagePct = Math.round(m.progress * 100);
-                        const overallPct = 40 + Math.round(((i - 1 + m.progress) / total) * 50);
-                        progress('pdf-progress-fill', 'pdf-status', overallPct,
-                            `OCR page ${i}/${total} - ${pagePct}%`);
-                    }
-                }
-            });
-
-            // Collect recognized text lines
-            const lines = result.data.text.split('\n').map(l => l.trim()).filter(Boolean);
-            lines.forEach(line => allText.push(line));
-
-            // Clean up canvas
-            canvas.width = 0;
-            canvas.height = 0;
-        }
-
-        if (!allText.length) {
-            progress('pdf-progress-fill', 'pdf-status', 100, 'No text could be recognized in this PDF.');
-            return;
-        }
-
-        // Step 3: Build rows for CSV
-        // Split each line by common separators (tabs, multiple spaces, pipes)
-        const rows = allText.map(line => {
-            // Try tab first, then multiple spaces, then keep as single column
-            if (line.includes('\t')) return line.split('\t').map(c => c.trim());
-            const parts = line.split(/\s{2,}/).map(c => c.trim()).filter(Boolean);
-            return parts.length > 1 ? parts : [line];
-        });
-
-        const maxCols = Math.max(...rows.map(r => r.length));
-        rows.forEach(r => { while (r.length < maxCols) r.push(''); });
-
-        csvData = rows.map(r => r.map(c => `"${c.replace(/"/g, '""')}"`).join(',')).join('\n');
-
-        // Table preview
-        const table = document.getElementById('pdf-table');
-        table.innerHTML = '';
-        rows.slice(0, 80).forEach((row, idx) => {
-            const tr = document.createElement('tr');
-            row.forEach(c => {
-                const el = document.createElement(idx === 0 ? 'th' : 'td');
-                el.textContent = c;
-                tr.appendChild(el);
-            });
-            table.appendChild(tr);
-        });
-        if (rows.length > 80) {
-            const tr = document.createElement('tr');
-            const td = document.createElement('td');
-            td.colSpan = maxCols;
-            td.style.textAlign = 'center';
-            td.style.color = '#999';
-            td.textContent = `+ ${rows.length - 80} more rows`;
-            tr.appendChild(td);
-            table.appendChild(tr);
-        }
-
-        progress('pdf-progress-fill', 'pdf-status', 100, `Done - ${rows.length} rows extracted from ${total} pages.`);
-        document.getElementById('pdf-preview').classList.remove('hidden');
-
-    } catch (err) {
-        console.error(err);
-        progress('pdf-progress-fill', 'pdf-status', 100, 'Something went wrong: ' + err.message);
-    }
-}
-
-document.getElementById('pdf-download-btn').onclick = () => {
-    if (!csvData) return;
-    // UTF-8 BOM so Excel opens Hindi/Unicode text properly
-    const bom = '\uFEFF';
-    saveAs(new Blob([bom + csvData], { type: 'text/csv;charset=utf-8;' }), 'converted.csv');
-};
-
-function resetPdf() {
-    csvData = '';
-    document.getElementById('pdf-input').value = '';
-    document.getElementById('pdf-preview').classList.add('hidden');
-    hideProgress('pdf-progress-fill');
-}
-
-// ---------------------------------------------------
-// 2) IMAGE TO TEXT (OCR)
-// ---------------------------------------------------
-let ocrText = '';
-
-setupDrop('img-drop-zone', 'img-input', files => handleOcr(files[0]));
-
-async function handleOcr(file) {
-    if (!file || !file.type.startsWith('image/')) { alert('Please pick an image file.'); return; }
-
-    showFileInfo('img-file-info', file, resetOcr);
-    progress('ocr-progress-fill', 'ocr-status', 5, 'Starting OCR engine...');
-    document.getElementById('img-preview').classList.add('hidden');
-
-    document.getElementById('ocr-image-preview').src = URL.createObjectURL(file);
-
-    try {
-        // Get selected languages from checkboxes
-        const checkedLangs = document.querySelectorAll('input[name="ocr-lang"]:checked');
-        const selectedLangs = Array.from(checkedLangs).map(cb => cb.value);
-        const langs = selectedLangs.length ? selectedLangs.join('+') : 'hin+eng';
-
-        const langNames = Array.from(checkedLangs).map(cb => cb.parentElement.querySelector('.lang-chip').textContent);
-        progress('ocr-progress-fill', 'ocr-status', 8,
-            `Loading language data for: ${langNames.join(', ')}...`);
-
-        const result = await Tesseract.recognize(file, langs, {
-            logger: m => {
-                if (m.status === 'loading tesseract core') {
-                    progress('ocr-progress-fill', 'ocr-status', 10, 'Loading OCR engine...');
-                } else if (m.status === 'initializing tesseract') {
-                    progress('ocr-progress-fill', 'ocr-status', 15, 'Initializing...');
-                } else if (m.status === 'loading language traineddata') {
-                    progress('ocr-progress-fill', 'ocr-status', 20, 'Downloading language data...');
-                } else if (m.status === 'recognizing text') {
-                    const pct = 30 + Math.round(m.progress * 70);
-                    progress('ocr-progress-fill', 'ocr-status', pct, `Recognizing text... ${pct}%`);
-                }
-            }
-        });
-
-        ocrText = result.data.text;
-        const conf = Math.round(result.data.confidence);
-        const words = ocrText.split(/\s+/).filter(Boolean).length;
-
-        document.getElementById('ocr-text-output').value = ocrText;
-        document.getElementById('ocr-stats').innerHTML = `
-            <span><i class="fas fa-chart-bar"></i> Confidence: ${conf}%</span>
-            <span><i class="fas fa-font"></i> Words: ${words}</span>
-            <span><i class="fas fa-text-width"></i> Characters: ${ocrText.length}</span>
-        `;
-
-        progress('ocr-progress-fill', 'ocr-status', 100, 'Done!');
-        document.getElementById('img-preview').classList.remove('hidden');
-
-    } catch (err) {
-        console.error(err);
-        progress('ocr-progress-fill', 'ocr-status', 100, 'Something went wrong: ' + err.message);
-    }
-}
-
-document.getElementById('ocr-download-btn').onclick = () => {
-    if (!ocrText) return;
-    const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
-xmlns:w="urn:schemas-microsoft-com:office:word"
-xmlns="http://www.w3.org/TR/REC-html40">
-<head><meta charset="utf-8"><title>Extracted Text</title>
-<style>body{font-family:Calibri,sans-serif;font-size:12pt;line-height:1.6;padding:40px}</style>
-</head><body>${ocrText.replace(/\n/g, '<br>')}</body></html>`;
-    saveAs(new Blob(['\ufeff' + html], { type: 'application/msword' }), 'extracted-text.doc');
-};
-
-function resetOcr() {
-    ocrText = '';
-    document.getElementById('img-input').value = '';
-    document.getElementById('img-preview').classList.add('hidden');
-    hideProgress('ocr-progress-fill');
-}
-
-// ---------------------------------------------------
-// 3) JPG TO PNG
-// ---------------------------------------------------
-let pngBlobs = [];
-
-setupDrop('jpg-drop-zone', 'jpg-input', handleJpg);
-
-async function handleJpg(fileList) {
-    const files = Array.from(fileList).filter(f => f.type === 'image/jpeg');
-    if (!files.length) { alert('Please pick JPG/JPEG files.'); return; }
-
-    const info = files.length === 1
-        ? files[0]
-        : { name: `${files.length} JPG files`, size: files.reduce((a, f) => a + f.size, 0) };
-    showFileInfo('jpg-file-info', info, resetJpg);
-
-    progress('jpg-progress-fill', 'jpg-status', 5, 'Converting...');
-    document.getElementById('jpg-preview').classList.add('hidden');
-
-    pngBlobs = [];
-    const grid = document.getElementById('jpg-results');
-    grid.innerHTML = '';
-
-    for (let i = 0; i < files.length; i++) {
-        progress('jpg-progress-fill', 'jpg-status',
-            Math.round(((i + 1) / files.length) * 95),
-            `Converting ${i + 1} of ${files.length}...`
-        );
-
-        const blob = await jpgToPng(files[i]);
-        const name = files[i].name.replace(/\.jpe?g$/i, '.png');
-        pngBlobs.push({ name, blob });
-
-        const card = document.createElement('div');
-        card.className = 'img-card';
-        const url = URL.createObjectURL(blob);
-        card.innerHTML = `
-            <img src="${url}" alt="${name}">
-            <div class="img-card-foot">
-                <span class="img-name" title="${name}">${name}</span>
-                <button class="dl-one" title="Download"><i class="fas fa-download"></i></button>
-            </div>
-        `;
-        card.querySelector('.dl-one').onclick = () => saveAs(blob, name);
-        grid.appendChild(card);
-    }
-
-    progress('jpg-progress-fill', 'jpg-status', 100,
-        `Done - ${files.length} image${files.length > 1 ? 's' : ''} converted.`);
-    document.getElementById('jpg-preview').classList.remove('hidden');
-}
-
-function jpgToPng(file) {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => {
-            const c = document.createElement('canvas');
-            c.width = img.naturalWidth;
-            c.height = img.naturalHeight;
-            c.getContext('2d').drawImage(img, 0, 0);
-            c.toBlob(b => b ? resolve(b) : reject(new Error('Conversion failed')), 'image/png');
-            URL.revokeObjectURL(img.src);
-        };
-        img.onerror = () => reject(new Error('Could not load image'));
-        img.src = URL.createObjectURL(file);
-    });
-}
-
-document.getElementById('jpg-download-all-btn').onclick = async () => {
-    if (!pngBlobs.length) return;
-    if (pngBlobs.length === 1) { saveAs(pngBlobs[0].blob, pngBlobs[0].name); return; }
-    const zip = new JSZip();
-    pngBlobs.forEach(p => zip.file(p.name, p.blob));
-    const z = await zip.generateAsync({ type: 'blob' });
-    saveAs(z, 'converted-images.zip');
-};
-
-function resetJpg() {
-    pngBlobs = [];
-    document.getElementById('jpg-input').value = '';
-    document.getElementById('jpg-preview').classList.add('hidden');
-    document.getElementById('jpg-results').innerHTML = '';
-    hideProgress('jpg-progress-fill');
-}
-
-// ---------------------------------------------------
-// 4) PDF TO JPG
-// ---------------------------------------------------
-let p2jBlobs = [];
-
-setupDrop('p2j-drop-zone', 'p2j-input', files => handleP2j(files[0]));
-
-async function handleP2j(file) {
-    if (!file || file.type !== 'application/pdf') { alert('Please pick a PDF file.'); return; }
-
-    showFileInfo('p2j-file-info', file, resetP2j);
-    progress('p2j-progress-fill', 'p2j-status', 5, 'Loading PDF...');
-    document.getElementById('p2j-preview').classList.add('hidden');
-
-    try {
-        const buf = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-        const total = pdf.numPages;
-
-        p2jBlobs = [];
-        const grid = document.getElementById('p2j-results');
-        grid.innerHTML = '';
-
-        for (let i = 1; i <= total; i++) {
-            progress('p2j-progress-fill', 'p2j-status',
-                Math.round((i / total) * 90),
-                `Rendering page ${i} of ${total}...`
-            );
-
-            const page = await pdf.getPage(i);
-            const scale = 2;
-            const viewport = page.getViewport({ scale });
-            const canvas = document.createElement('canvas');
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-            const ctx = canvas.getContext('2d');
-            await page.render({ canvasContext: ctx, viewport }).promise;
-
-            const blob = await new Promise(resolve =>
-                canvas.toBlob(b => resolve(b), 'image/jpeg', 0.92)
-            );
-            const name = `page-${i}.jpg`;
-            p2jBlobs.push({ name, blob });
-
-            const card = document.createElement('div');
-            card.className = 'img-card';
-            const url = URL.createObjectURL(blob);
-            card.innerHTML = `
-                <img src="${url}" alt="${name}">
-                <div class="img-card-foot">
-                    <span class="img-name" title="${name}">${name}</span>
-                    <button class="dl-one" title="Download"><i class="fas fa-download"></i></button>
-                </div>
-            `;
-            card.querySelector('.dl-one').onclick = () => saveAs(blob, name);
-            grid.appendChild(card);
-
-            canvas.width = 0;
-            canvas.height = 0;
-        }
-
-        progress('p2j-progress-fill', 'p2j-status', 100,
-            `Done - ${total} page${total > 1 ? 's' : ''} converted.`);
-        document.getElementById('p2j-preview').classList.remove('hidden');
-
-    } catch (err) {
-        console.error(err);
-        progress('p2j-progress-fill', 'p2j-status', 100, 'Something went wrong: ' + err.message);
-    }
-}
-
-document.getElementById('p2j-download-all-btn').onclick = async () => {
-    if (!p2jBlobs.length) return;
-    if (p2jBlobs.length === 1) { saveAs(p2jBlobs[0].blob, p2jBlobs[0].name); return; }
-    const zip = new JSZip();
-    p2jBlobs.forEach(p => zip.file(p.name, p.blob));
-    const z = await zip.generateAsync({ type: 'blob' });
-    saveAs(z, 'pdf-pages.zip');
-};
-
-function resetP2j() {
-    p2jBlobs = [];
-    document.getElementById('p2j-input').value = '';
-    document.getElementById('p2j-preview').classList.add('hidden');
-    document.getElementById('p2j-results').innerHTML = '';
-    hideProgress('p2j-progress-fill');
-}
-
-// ---------------------------------------------------
-// 5) JPG TO PDF
-// ---------------------------------------------------
-let j2pFiles = [];
-
-setupDrop('j2p-drop-zone', 'j2p-input', handleJ2p);
-
-async function handleJ2p(fileList) {
-    const files = Array.from(fileList).filter(f => f.type === 'image/jpeg');
-    if (!files.length) { alert('Please pick JPG/JPEG files.'); return; }
-
-    const info = files.length === 1
-        ? files[0]
-        : { name: `${files.length} JPG files`, size: files.reduce((a, f) => a + f.size, 0) };
-    showFileInfo('j2p-file-info', info, resetJ2p);
-
-    progress('j2p-progress-fill', 'j2p-status', 5, 'Reading images...');
-    document.getElementById('j2p-preview').classList.add('hidden');
-
-    j2pFiles = files;
-    const grid = document.getElementById('j2p-results');
-    grid.innerHTML = '';
-
-    for (let i = 0; i < files.length; i++) {
-        progress('j2p-progress-fill', 'j2p-status',
-            Math.round(((i + 1) / files.length) * 90),
-            `Loading image ${i + 1} of ${files.length}...`
-        );
-
-        const url = URL.createObjectURL(files[i]);
-        const card = document.createElement('div');
-        card.className = 'img-card';
-        card.innerHTML = `
-            <img src="${url}" alt="Page ${i + 1}">
-            <div class="img-card-foot">
-                <span class="img-name" title="${files[i].name}">Page ${i + 1}</span>
-            </div>
-        `;
-        grid.appendChild(card);
-    }
-
-    progress('j2p-progress-fill', 'j2p-status', 100,
-        `${files.length} image${files.length > 1 ? 's' : ''} ready. Click Download PDF.`);
-    document.getElementById('j2p-preview').classList.remove('hidden');
-}
-
-document.getElementById('j2p-download-btn').onclick = async () => {
-    if (!j2pFiles.length) return;
-
-    progress('j2p-progress-fill', 'j2p-status', 10, 'Building PDF...');
-    const { jsPDF } = window.jspdf;
-
-    let pdf = null;
-
-    for (let i = 0; i < j2pFiles.length; i++) {
-        progress('j2p-progress-fill', 'j2p-status',
-            10 + Math.round(((i + 1) / j2pFiles.length) * 85),
-            `Adding page ${i + 1} of ${j2pFiles.length}...`
-        );
-
-        const imgData = await readFileAsDataURL(j2pFiles[i]);
-        const dims = await getImageDimensions(imgData);
-
-        const orientation = dims.width > dims.height ? 'landscape' : 'portrait';
-        const pageWidth = orientation === 'landscape' ? 297 : 210;
-        const pageHeight = orientation === 'landscape' ? 210 : 297;
-
-        // Fit image to page with margins
-        const margin = 0;
-        const maxW = pageWidth - margin * 2;
-        const maxH = pageHeight - margin * 2;
-        const ratio = Math.min(maxW / dims.width, maxH / dims.height);
-        const w = dims.width * ratio;
-        const h = dims.height * ratio;
-        const x = (pageWidth - w) / 2;
-        const y = (pageHeight - h) / 2;
-
-        if (i === 0) {
-            pdf = new jsPDF({ orientation, unit: 'mm', format: 'a4' });
-        } else {
-            pdf.addPage('a4', orientation);
-        }
-        pdf.addImage(imgData, 'JPEG', x, y, w, h);
-    }
-
-    progress('j2p-progress-fill', 'j2p-status', 100, 'Done!');
-    pdf.save('combined.pdf');
-};
 
 function readFileAsDataURL(file) {
     return new Promise((resolve, reject) => {
@@ -668,213 +108,6 @@ function getImageDimensions(dataUrl) {
         img.src = dataUrl;
     });
 }
-
-function resetJ2p() {
-    j2pFiles = [];
-    document.getElementById('j2p-input').value = '';
-    document.getElementById('j2p-preview').classList.add('hidden');
-    document.getElementById('j2p-results').innerHTML = '';
-    hideProgress('j2p-progress-fill');
-}
-
-// ---------------------------------------------------
-// 6) PDF TO WORD
-// ---------------------------------------------------
-let p2wText = '';
-
-setupDrop('p2w-drop-zone', 'p2w-input', files => handleP2w(files[0]));
-
-async function handleP2w(file) {
-    if (!file || file.type !== 'application/pdf') { alert('Please pick a PDF file.'); return; }
-
-    showFileInfo('p2w-file-info', file, resetP2w);
-    progress('p2w-progress-fill', 'p2w-status', 5, 'Loading PDF...');
-    document.getElementById('p2w-preview').classList.add('hidden');
-
-    try {
-        const buf = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-        const total = pdf.numPages;
-        const allText = [];
-
-        // Try text layer extraction first
-        let hasTextLayer = false;
-        for (let i = 1; i <= total; i++) {
-            progress('p2w-progress-fill', 'p2w-status',
-                Math.round((i / total) * 50),
-                `Extracting text from page ${i} of ${total}...`
-            );
-            const page = await pdf.getPage(i);
-            const content = await page.getTextContent();
-            const pageText = content.items.map(item => item.str).join(' ').trim();
-            if (pageText) { hasTextLayer = true; allText.push(pageText); }
-        }
-
-        // If no text layer, fall back to OCR
-        if (!hasTextLayer) {
-            allText.length = 0;
-            for (let i = 1; i <= total; i++) {
-                progress('p2w-progress-fill', 'p2w-status',
-                    Math.round((i / total) * 40),
-                    `Rendering page ${i} of ${total} for OCR...`
-                );
-                const page = await pdf.getPage(i);
-                const scale = 2;
-                const viewport = page.getViewport({ scale });
-                const canvas = document.createElement('canvas');
-                canvas.width = viewport.width;
-                canvas.height = viewport.height;
-                await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
-
-                progress('p2w-progress-fill', 'p2w-status',
-                    40 + Math.round((i / total) * 55),
-                    `OCR scanning page ${i} of ${total}...`
-                );
-                const imgData = canvas.toDataURL('image/png');
-                const result = await Tesseract.recognize(imgData, 'hin+eng');
-                const lines = result.data.text.trim();
-                if (lines) allText.push(lines);
-                canvas.width = 0; canvas.height = 0;
-            }
-        }
-
-        if (!allText.length) {
-            progress('p2w-progress-fill', 'p2w-status', 100, 'No text could be extracted from this PDF.');
-            return;
-        }
-
-        p2wText = allText.join('\n\n');
-        const preview = p2wText.length > 3000 ? p2wText.substring(0, 3000) + '\n\n... (preview truncated)' : p2wText;
-        document.getElementById('p2w-text-preview').textContent = preview;
-        progress('p2w-progress-fill', 'p2w-status', 100, `Done - ${total} pages extracted.`);
-        document.getElementById('p2w-preview').classList.remove('hidden');
-
-    } catch (err) {
-        console.error(err);
-        progress('p2w-progress-fill', 'p2w-status', 100, 'Something went wrong: ' + err.message);
-    }
-}
-
-document.getElementById('p2w-download-btn').onclick = () => {
-    if (!p2wText) return;
-    const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
-xmlns:w="urn:schemas-microsoft-com:office:word"
-xmlns="http://www.w3.org/TR/REC-html40">
-<head><meta charset="utf-8"><title>Converted Document</title>
-<style>body{font-family:Calibri,sans-serif;font-size:12pt;line-height:1.8;padding:40px 60px}p{margin-bottom:12px}</style>
-</head><body>${p2wText.split('\n').map(line => '<p>' + line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</p>').join('')}</body></html>`;
-    saveAs(new Blob(['\ufeff' + html], { type: 'application/msword' }), 'converted.doc');
-};
-
-function resetP2w() {
-    p2wText = '';
-    document.getElementById('p2w-input').value = '';
-    document.getElementById('p2w-preview').classList.add('hidden');
-    hideProgress('p2w-progress-fill');
-}
-
-// ---------------------------------------------------
-// 7) WORD TO PDF
-// ---------------------------------------------------
-let w2pHtml = '';
-
-setupDrop('w2p-drop-zone', 'w2p-input', files => handleW2p(files[0]));
-
-async function handleW2p(file) {
-    if (!file) { alert('Please pick a Word file.'); return; }
-    const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
-    if (ext !== '.docx' && ext !== '.doc') { alert('Please pick a .docx file.'); return; }
-
-    showFileInfo('w2p-file-info', file, resetW2p);
-    progress('w2p-progress-fill', 'w2p-status', 10, 'Reading Word document...');
-    document.getElementById('w2p-preview').classList.add('hidden');
-
-    try {
-        const buf = await file.arrayBuffer();
-        progress('w2p-progress-fill', 'w2p-status', 40, 'Converting to viewable format...');
-
-        const result = await mammoth.convertToHtml({ arrayBuffer: buf });
-        w2pHtml = result.value;
-
-        const previewEl = document.getElementById('w2p-html-preview');
-        previewEl.innerHTML = w2pHtml;
-
-        progress('w2p-progress-fill', 'w2p-status', 100, 'Done! Preview shown below.');
-        document.getElementById('w2p-preview').classList.remove('hidden');
-
-    } catch (err) {
-        console.error(err);
-        progress('w2p-progress-fill', 'w2p-status', 100, 'Something went wrong: ' + err.message);
-    }
-}
-
-document.getElementById('w2p-download-btn').onclick = async () => {
-    if (!w2pHtml) return;
-    progress('w2p-progress-fill', 'w2p-status', 10, 'Building PDF...');
-
-    const container = document.getElementById('w2p-html-preview');
-    const origWidth = container.style.width;
-    container.style.width = '700px';
-
-    try {
-        const canvas = await html2canvas(container, { scale: 2, useCORS: true, windowWidth: 700 });
-        container.style.width = origWidth;
-
-        const { jsPDF } = window.jspdf;
-        const pageWidth = 210;
-        const pageHeight = 297;
-        const margin = 10;
-        const contentWidth = pageWidth - margin * 2;
-        const imgHeight = (canvas.height * contentWidth) / canvas.width;
-        const contentHeight = pageHeight - margin * 2;
-
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        let y = 0;
-        let page = 0;
-
-        while (y < imgHeight) {
-            if (page > 0) pdf.addPage();
-
-            const sourceY = (y / imgHeight) * canvas.height;
-            const sourceH = Math.min((contentHeight / imgHeight) * canvas.height, canvas.height - sourceY);
-            const destH = (sourceH / canvas.height) * imgHeight;
-
-            const pageCanvas = document.createElement('canvas');
-            pageCanvas.width = canvas.width;
-            pageCanvas.height = Math.ceil(sourceH);
-            const ctx = pageCanvas.getContext('2d');
-            ctx.drawImage(canvas, 0, sourceY, canvas.width, sourceH, 0, 0, canvas.width, sourceH);
-
-            const pageImg = pageCanvas.toDataURL('image/jpeg', 0.95);
-            pdf.addImage(pageImg, 'JPEG', margin, margin, contentWidth, destH);
-
-            y += contentHeight;
-            page++;
-        }
-
-        progress('w2p-progress-fill', 'w2p-status', 100, 'Done!');
-        pdf.save('converted.pdf');
-    } catch (err) {
-        container.style.width = origWidth;
-        console.error(err);
-        progress('w2p-progress-fill', 'w2p-status', 100, 'Something went wrong: ' + err.message);
-    }
-};
-
-function resetW2p() {
-    w2pHtml = '';
-    document.getElementById('w2p-input').value = '';
-    document.getElementById('w2p-preview').classList.add('hidden');
-    document.getElementById('w2p-html-preview').innerHTML = '';
-    hideProgress('w2p-progress-fill');
-}
-
-// ---------------------------------------------------
-// 8) CSV TO EXCEL
-// ---------------------------------------------------
-let c2eRows = [];
-
-setupDrop('c2e-drop-zone', 'c2e-input', files => handleC2e(files[0]));
 
 function parseCSV(text) {
     const rows = [];
@@ -910,422 +143,1088 @@ function parseCSV(text) {
     return rows;
 }
 
-async function handleC2e(file) {
-    if (!file) { alert('Please pick a CSV file.'); return; }
+// ===================================================
+// 1) PDF TO CSV
+// ===================================================
+if (document.getElementById('pdf-drop-zone')) {
+    let csvData = '';
 
-    showFileInfo('c2e-file-info', file, resetC2e);
-    progress('c2e-progress-fill', 'c2e-status', 10, 'Reading CSV...');
-    document.getElementById('c2e-preview').classList.add('hidden');
+    setupDrop('pdf-drop-zone', 'pdf-input', files => handlePdf(files[0]));
 
-    try {
-        const text = await file.text();
-        progress('c2e-progress-fill', 'c2e-status', 40, 'Parsing data...');
+    async function handlePdf(file) {
+        if (!file || file.type !== 'application/pdf') { alert('Please pick a PDF file.'); return; }
 
-        const rows = parseCSV(text);
-        if (!rows.length) {
-            progress('c2e-progress-fill', 'c2e-status', 100, 'No data found in CSV file.');
-            return;
-        }
+        showFileInfo('pdf-file-info', file, resetPdf);
+        progress('pdf-progress-fill', 'pdf-status', 5, 'Loading PDF...');
+        document.getElementById('pdf-preview').classList.add('hidden');
 
-        // Normalize column count
-        const maxCols = Math.max(...rows.map(r => r.length));
-        rows.forEach(r => { while (r.length < maxCols) r.push(''); });
+        try {
+            const buf = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+            const total = pdf.numPages;
+            const allText = [];
 
-        // Preview table
-        const table = document.getElementById('c2e-table');
-        table.innerHTML = '';
-        rows.slice(0, 50).forEach((row, idx) => {
-            const tr = document.createElement('tr');
-            row.forEach(c => {
-                const el = document.createElement(idx === 0 ? 'th' : 'td');
-                el.textContent = c;
-                tr.appendChild(el);
+            for (let i = 1; i <= total; i++) {
+                progress('pdf-progress-fill', 'pdf-status',
+                    Math.round((i / total) * 40),
+                    `Rendering page ${i} of ${total} as image...`
+                );
+
+                const page = await pdf.getPage(i);
+                const scale = 2;
+                const viewport = page.getViewport({ scale });
+                const canvas = document.createElement('canvas');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                const ctx = canvas.getContext('2d');
+                await page.render({ canvasContext: ctx, viewport }).promise;
+
+                progress('pdf-progress-fill', 'pdf-status',
+                    40 + Math.round((i / total) * 50),
+                    `OCR scanning page ${i} of ${total} (Hindi + English)...`
+                );
+
+                const imgData = canvas.toDataURL('image/png');
+                const result = await Tesseract.recognize(imgData, 'hin+eng', {
+                    logger: m => {
+                        if (m.status === 'recognizing text') {
+                            const overallPct = 40 + Math.round(((i - 1 + m.progress) / total) * 50);
+                            progress('pdf-progress-fill', 'pdf-status', overallPct,
+                                `OCR page ${i}/${total} - ${Math.round(m.progress * 100)}%`);
+                        }
+                    }
+                });
+
+                const lines = result.data.text.split('\n').map(l => l.trim()).filter(Boolean);
+                lines.forEach(line => allText.push(line));
+                canvas.width = 0;
+                canvas.height = 0;
+            }
+
+            if (!allText.length) {
+                progress('pdf-progress-fill', 'pdf-status', 100, 'No text could be recognized in this PDF.');
+                return;
+            }
+
+            const rows = allText.map(line => {
+                if (line.includes('\t')) return line.split('\t').map(c => c.trim());
+                const parts = line.split(/\s{2,}/).map(c => c.trim()).filter(Boolean);
+                return parts.length > 1 ? parts : [line];
             });
-            table.appendChild(tr);
-        });
-        if (rows.length > 50) {
-            const tr = document.createElement('tr');
-            const td = document.createElement('td');
-            td.colSpan = maxCols;
-            td.style.textAlign = 'center';
-            td.style.color = '#999';
-            td.textContent = `+ ${rows.length - 50} more rows`;
-            tr.appendChild(td);
-            table.appendChild(tr);
+
+            const maxCols = Math.max(...rows.map(r => r.length));
+            rows.forEach(r => { while (r.length < maxCols) r.push(''); });
+
+            csvData = rows.map(r => r.map(c => `"${c.replace(/"/g, '""')}"`).join(',')).join('\n');
+
+            const table = document.getElementById('pdf-table');
+            table.innerHTML = '';
+            rows.slice(0, 80).forEach((row, idx) => {
+                const tr = document.createElement('tr');
+                row.forEach(c => {
+                    const el = document.createElement(idx === 0 ? 'th' : 'td');
+                    el.textContent = c;
+                    tr.appendChild(el);
+                });
+                table.appendChild(tr);
+            });
+            if (rows.length > 80) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = maxCols;
+                td.style.textAlign = 'center';
+                td.style.color = '#999';
+                td.textContent = `+ ${rows.length - 80} more rows`;
+                tr.appendChild(td);
+                table.appendChild(tr);
+            }
+
+            progress('pdf-progress-fill', 'pdf-status', 100, `Done - ${rows.length} rows extracted from ${total} pages.`);
+            document.getElementById('pdf-preview').classList.remove('hidden');
+
+        } catch (err) {
+            console.error(err);
+            progress('pdf-progress-fill', 'pdf-status', 100, 'Something went wrong: ' + err.message);
         }
+    }
 
-        c2eRows = rows;
-        progress('c2e-progress-fill', 'c2e-status', 100, `Done - ${rows.length} rows found.`);
-        document.getElementById('c2e-preview').classList.remove('hidden');
+    document.getElementById('pdf-download-btn').onclick = () => {
+        if (!csvData) return;
+        const bom = '\uFEFF';
+        saveAs(new Blob([bom + csvData], { type: 'text/csv;charset=utf-8;' }), 'converted.csv');
+    };
 
-    } catch (err) {
-        console.error(err);
-        progress('c2e-progress-fill', 'c2e-status', 100, 'Something went wrong: ' + err.message);
+    function resetPdf() {
+        csvData = '';
+        document.getElementById('pdf-input').value = '';
+        document.getElementById('pdf-preview').classList.add('hidden');
+        hideProgress('pdf-progress-fill');
     }
 }
 
-document.getElementById('c2e-download-btn').onclick = () => {
-    if (!c2eRows.length) return;
-    const ws = XLSX.utils.aoa_to_sheet(c2eRows);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'converted.xlsx');
-};
+// ===================================================
+// 2) IMAGE TO TEXT (OCR)
+// ===================================================
+if (document.getElementById('img-drop-zone')) {
+    let ocrText = '';
 
-function resetC2e() {
-    c2eRows = [];
-    document.getElementById('c2e-input').value = '';
-    document.getElementById('c2e-preview').classList.add('hidden');
-    document.getElementById('c2e-table').innerHTML = '';
-    hideProgress('c2e-progress-fill');
-}
+    setupDrop('img-drop-zone', 'img-input', files => handleOcr(files[0]));
 
-// ---------------------------------------------------
-// 9) PDF TO EXCEL
-// ---------------------------------------------------
-let p2eRows = [];
+    async function handleOcr(file) {
+        if (!file || !file.type.startsWith('image/')) { alert('Please pick an image file.'); return; }
 
-setupDrop('p2e-drop-zone', 'p2e-input', files => handleP2e(files[0]));
+        showFileInfo('img-file-info', file, resetOcr);
+        progress('ocr-progress-fill', 'ocr-status', 5, 'Starting OCR engine...');
+        document.getElementById('img-preview').classList.add('hidden');
+        document.getElementById('ocr-image-preview').src = URL.createObjectURL(file);
 
-async function handleP2e(file) {
-    if (!file || file.type !== 'application/pdf') { alert('Please pick a PDF file.'); return; }
+        try {
+            const checkedLangs = document.querySelectorAll('input[name="ocr-lang"]:checked');
+            const selectedLangs = Array.from(checkedLangs).map(cb => cb.value);
+            const langs = selectedLangs.length ? selectedLangs.join('+') : 'hin+eng';
 
-    showFileInfo('p2e-file-info', file, resetP2e);
-    progress('p2e-progress-fill', 'p2e-status', 5, 'Loading PDF...');
-    document.getElementById('p2e-preview').classList.add('hidden');
+            const langNames = Array.from(checkedLangs).map(cb => cb.parentElement.querySelector('.lang-chip').textContent);
+            progress('ocr-progress-fill', 'ocr-status', 8,
+                `Loading language data for: ${langNames.join(', ')}...`);
 
-    try {
-        const buf = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-        const total = pdf.numPages;
-        const allText = [];
-
-        for (let i = 1; i <= total; i++) {
-            progress('p2e-progress-fill', 'p2e-status',
-                Math.round((i / total) * 40),
-                `Rendering page ${i} of ${total} as image...`
-            );
-
-            const page = await pdf.getPage(i);
-            const scale = 2;
-            const viewport = page.getViewport({ scale });
-            const canvas = document.createElement('canvas');
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-            await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
-
-            progress('p2e-progress-fill', 'p2e-status',
-                40 + Math.round((i / total) * 50),
-                `OCR scanning page ${i} of ${total}...`
-            );
-
-            const imgData = canvas.toDataURL('image/png');
-            const result = await Tesseract.recognize(imgData, 'hin+eng', {
+            const result = await Tesseract.recognize(file, langs, {
                 logger: m => {
-                    if (m.status === 'recognizing text') {
-                        const overallPct = 40 + Math.round(((i - 1 + m.progress) / total) * 50);
-                        progress('p2e-progress-fill', 'p2e-status', overallPct,
-                            `OCR page ${i}/${total} - ${Math.round(m.progress * 100)}%`);
+                    if (m.status === 'loading tesseract core') {
+                        progress('ocr-progress-fill', 'ocr-status', 10, 'Loading OCR engine...');
+                    } else if (m.status === 'initializing tesseract') {
+                        progress('ocr-progress-fill', 'ocr-status', 15, 'Initializing...');
+                    } else if (m.status === 'loading language traineddata') {
+                        progress('ocr-progress-fill', 'ocr-status', 20, 'Downloading language data...');
+                    } else if (m.status === 'recognizing text') {
+                        const pct = 30 + Math.round(m.progress * 70);
+                        progress('ocr-progress-fill', 'ocr-status', pct, `Recognizing text... ${pct}%`);
                     }
                 }
             });
 
-            const lines = result.data.text.split('\n').map(l => l.trim()).filter(Boolean);
-            lines.forEach(line => allText.push(line));
-            canvas.width = 0; canvas.height = 0;
+            ocrText = result.data.text;
+            const conf = Math.round(result.data.confidence);
+            const words = ocrText.split(/\s+/).filter(Boolean).length;
+
+            document.getElementById('ocr-text-output').value = ocrText;
+            document.getElementById('ocr-stats').innerHTML = `
+                <span><i class="fas fa-chart-bar"></i> Confidence: ${conf}%</span>
+                <span><i class="fas fa-font"></i> Words: ${words}</span>
+                <span><i class="fas fa-text-width"></i> Characters: ${ocrText.length}</span>
+            `;
+
+            progress('ocr-progress-fill', 'ocr-status', 100, 'Done!');
+            document.getElementById('img-preview').classList.remove('hidden');
+
+        } catch (err) {
+            console.error(err);
+            progress('ocr-progress-fill', 'ocr-status', 100, 'Something went wrong: ' + err.message);
         }
+    }
 
-        if (!allText.length) {
-            progress('p2e-progress-fill', 'p2e-status', 100, 'No text could be recognized in this PDF.');
-            return;
-        }
+    document.getElementById('ocr-download-btn').onclick = () => {
+        if (!ocrText) return;
+        const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>Extracted Text</title>
+<style>body{font-family:Calibri,sans-serif;font-size:12pt;line-height:1.6;padding:40px}</style>
+</head><body>${ocrText.replace(/\n/g, '<br>')}</body></html>`;
+        saveAs(new Blob(['\ufeff' + html], { type: 'application/msword' }), 'extracted-text.doc');
+    };
 
-        // Build rows
-        const rows = allText.map(line => {
-            if (line.includes('\t')) return line.split('\t').map(c => c.trim());
-            const parts = line.split(/\s{2,}/).map(c => c.trim()).filter(Boolean);
-            return parts.length > 1 ? parts : [line];
-        });
-
-        const maxCols = Math.max(...rows.map(r => r.length));
-        rows.forEach(r => { while (r.length < maxCols) r.push(''); });
-
-        // Table preview
-        const table = document.getElementById('p2e-table');
-        table.innerHTML = '';
-        rows.slice(0, 80).forEach((row, idx) => {
-            const tr = document.createElement('tr');
-            row.forEach(c => {
-                const el = document.createElement(idx === 0 ? 'th' : 'td');
-                el.textContent = c;
-                tr.appendChild(el);
-            });
-            table.appendChild(tr);
-        });
-        if (rows.length > 80) {
-            const tr = document.createElement('tr');
-            const td = document.createElement('td');
-            td.colSpan = maxCols;
-            td.style.textAlign = 'center';
-            td.style.color = '#999';
-            td.textContent = `+ ${rows.length - 80} more rows`;
-            tr.appendChild(td);
-            table.appendChild(tr);
-        }
-
-        p2eRows = rows;
-        progress('p2e-progress-fill', 'p2e-status', 100, `Done - ${rows.length} rows extracted from ${total} pages.`);
-        document.getElementById('p2e-preview').classList.remove('hidden');
-
-    } catch (err) {
-        console.error(err);
-        progress('p2e-progress-fill', 'p2e-status', 100, 'Something went wrong: ' + err.message);
+    function resetOcr() {
+        ocrText = '';
+        document.getElementById('img-input').value = '';
+        document.getElementById('img-preview').classList.add('hidden');
+        hideProgress('ocr-progress-fill');
     }
 }
 
-document.getElementById('p2e-download-btn').onclick = () => {
-    if (!p2eRows.length) return;
-    const ws = XLSX.utils.aoa_to_sheet(p2eRows);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'converted.xlsx');
-};
+// ===================================================
+// 3) JPG TO PNG
+// ===================================================
+if (document.getElementById('jpg-drop-zone')) {
+    let pngBlobs = [];
 
-function resetP2e() {
-    p2eRows = [];
-    document.getElementById('p2e-input').value = '';
-    document.getElementById('p2e-preview').classList.add('hidden');
-    document.getElementById('p2e-table').innerHTML = '';
-    hideProgress('p2e-progress-fill');
-}
+    setupDrop('jpg-drop-zone', 'jpg-input', handleJpg);
 
-// ---------------------------------------------------
-// 10) EXCEL TO PDF
-// ---------------------------------------------------
-let e2pData = [];
+    async function handleJpg(fileList) {
+        const files = Array.from(fileList).filter(f => f.type === 'image/jpeg');
+        if (!files.length) { alert('Please pick JPG/JPEG files.'); return; }
 
-setupDrop('e2p-drop-zone', 'e2p-input', files => handleE2p(files[0]));
+        const info = files.length === 1
+            ? files[0]
+            : { name: `${files.length} JPG files`, size: files.reduce((a, f) => a + f.size, 0) };
+        showFileInfo('jpg-file-info', info, resetJpg);
 
-async function handleE2p(file) {
-    if (!file) { alert('Please pick an Excel file.'); return; }
+        progress('jpg-progress-fill', 'jpg-status', 5, 'Converting...');
+        document.getElementById('jpg-preview').classList.add('hidden');
 
-    showFileInfo('e2p-file-info', file, resetE2p);
-    progress('e2p-progress-fill', 'e2p-status', 10, 'Reading Excel file...');
-    document.getElementById('e2p-preview').classList.add('hidden');
+        pngBlobs = [];
+        const grid = document.getElementById('jpg-results');
+        grid.innerHTML = '';
 
-    try {
-        const buf = await file.arrayBuffer();
-        progress('e2p-progress-fill', 'e2p-status', 50, 'Parsing spreadsheet...');
+        for (let i = 0; i < files.length; i++) {
+            progress('jpg-progress-fill', 'jpg-status',
+                Math.round(((i + 1) / files.length) * 95),
+                `Converting ${i + 1} of ${files.length}...`
+            );
 
-        const wb = XLSX.read(buf, { type: 'array' });
-        const ws = wb.Sheets[wb.SheetNames[0]];
-        const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+            const blob = await jpgToPng(files[i]);
+            const name = files[i].name.replace(/\.jpe?g$/i, '.png');
+            pngBlobs.push({ name, blob });
 
-        if (!data.length) {
-            progress('e2p-progress-fill', 'e2p-status', 100, 'No data found in Excel file.');
-            return;
+            const card = document.createElement('div');
+            card.className = 'img-card';
+            const url = URL.createObjectURL(blob);
+            card.innerHTML = `
+                <img src="${url}" alt="${name}">
+                <div class="img-card-foot">
+                    <span class="img-name" title="${name}">${name}</span>
+                    <button class="dl-one" title="Download"><i class="fas fa-download"></i></button>
+                </div>
+            `;
+            card.querySelector('.dl-one').onclick = () => saveAs(blob, name);
+            grid.appendChild(card);
         }
 
-        // Normalize: ensure all rows are arrays with same column count
-        const maxCols = Math.max(...data.map(r => (Array.isArray(r) ? r : [r]).length));
-        const normalized = data.map(r => {
-            const arr = Array.isArray(r) ? r : [r];
-            while (arr.length < maxCols) arr.push('');
-            return arr.map(c => (c != null ? String(c) : ''));
+        progress('jpg-progress-fill', 'jpg-status', 100,
+            `Done - ${files.length} image${files.length > 1 ? 's' : ''} converted.`);
+        document.getElementById('jpg-preview').classList.remove('hidden');
+    }
+
+    function jpgToPng(file) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+                const c = document.createElement('canvas');
+                c.width = img.naturalWidth;
+                c.height = img.naturalHeight;
+                c.getContext('2d').drawImage(img, 0, 0);
+                c.toBlob(b => b ? resolve(b) : reject(new Error('Conversion failed')), 'image/png');
+                URL.revokeObjectURL(img.src);
+            };
+            img.onerror = () => reject(new Error('Could not load image'));
+            img.src = URL.createObjectURL(file);
         });
+    }
 
-        // Preview table
-        const table = document.getElementById('e2p-table');
-        table.innerHTML = '';
-        normalized.slice(0, 50).forEach((row, idx) => {
-            const tr = document.createElement('tr');
-            row.forEach(c => {
-                const el = document.createElement(idx === 0 ? 'th' : 'td');
-                el.textContent = c;
-                tr.appendChild(el);
-            });
-            table.appendChild(tr);
-        });
-        if (normalized.length > 50) {
-            const tr = document.createElement('tr');
-            const td = document.createElement('td');
-            td.colSpan = maxCols;
-            td.style.textAlign = 'center';
-            td.style.color = '#999';
-            td.textContent = `+ ${normalized.length - 50} more rows`;
-            tr.appendChild(td);
-            table.appendChild(tr);
-        }
+    document.getElementById('jpg-download-all-btn').onclick = async () => {
+        if (!pngBlobs.length) return;
+        if (pngBlobs.length === 1) { saveAs(pngBlobs[0].blob, pngBlobs[0].name); return; }
+        const zip = new JSZip();
+        pngBlobs.forEach(p => zip.file(p.name, p.blob));
+        const z = await zip.generateAsync({ type: 'blob' });
+        saveAs(z, 'converted-images.zip');
+    };
 
-        e2pData = normalized;
-        progress('e2p-progress-fill', 'e2p-status', 100,
-            `Done - ${data.length} rows, ${wb.SheetNames.length} sheet(s).`);
-        document.getElementById('e2p-preview').classList.remove('hidden');
-
-    } catch (err) {
-        console.error(err);
-        progress('e2p-progress-fill', 'e2p-status', 100, 'Something went wrong: ' + err.message);
+    function resetJpg() {
+        pngBlobs = [];
+        document.getElementById('jpg-input').value = '';
+        document.getElementById('jpg-preview').classList.add('hidden');
+        document.getElementById('jpg-results').innerHTML = '';
+        hideProgress('jpg-progress-fill');
     }
 }
 
-document.getElementById('e2p-download-btn').onclick = () => {
-    if (!e2pData.length) return;
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF('l', 'mm', 'a4');
+// ===================================================
+// 4) PDF TO JPG
+// ===================================================
+if (document.getElementById('p2j-drop-zone')) {
+    let p2jBlobs = [];
 
-    const head = e2pData.length > 0 ? [e2pData[0]] : [];
-    const body = e2pData.slice(1);
+    setupDrop('p2j-drop-zone', 'p2j-input', files => handleP2j(files[0]));
 
-    pdf.autoTable({
-        head: head,
-        body: body,
-        startY: 10,
-        styles: { fontSize: 8, cellPadding: 2 },
-        headStyles: { fillColor: [41, 128, 185] },
-        theme: 'grid'
-    });
+    async function handleP2j(file) {
+        if (!file || file.type !== 'application/pdf') { alert('Please pick a PDF file.'); return; }
 
-    pdf.save('converted.pdf');
-};
+        showFileInfo('p2j-file-info', file, resetP2j);
+        progress('p2j-progress-fill', 'p2j-status', 5, 'Loading PDF...');
+        document.getElementById('p2j-preview').classList.add('hidden');
 
-function resetE2p() {
-    e2pData = [];
-    document.getElementById('e2p-input').value = '';
-    document.getElementById('e2p-preview').classList.add('hidden');
-    document.getElementById('e2p-table').innerHTML = '';
-    hideProgress('e2p-progress-fill');
-}
+        try {
+            const buf = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+            const total = pdf.numPages;
 
-// ---------------------------------------------------
-// 11) MERGE PDF
-// ---------------------------------------------------
-let mpdfFiles = [];
-let mpdfBlob = null;
-let mpdfDragIdx = null;
+            p2jBlobs = [];
+            const grid = document.getElementById('p2j-results');
+            grid.innerHTML = '';
 
-setupDrop('mpdf-drop-zone', 'mpdf-input', files => addMpdfFiles(files));
+            for (let i = 1; i <= total; i++) {
+                progress('p2j-progress-fill', 'p2j-status',
+                    Math.round((i / total) * 90),
+                    `Rendering page ${i} of ${total}...`
+                );
 
-function addMpdfFiles(files) {
-    const pdfs = Array.from(files).filter(f => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'));
-    if (!pdfs.length) { alert('Please select PDF files.'); return; }
-    mpdfFiles.push(...pdfs);
-    renderMpdfList();
-}
+                const page = await pdf.getPage(i);
+                const scale = 2;
+                const viewport = page.getViewport({ scale });
+                const canvas = document.createElement('canvas');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                const ctx = canvas.getContext('2d');
+                await page.render({ canvasContext: ctx, viewport }).promise;
 
-function renderMpdfList() {
-    const list = document.getElementById('mpdf-sortable');
-    const wrap = document.getElementById('mpdf-file-list');
-    const countEl = document.getElementById('mpdf-count');
-    list.innerHTML = '';
+                const blob = await new Promise(resolve =>
+                    canvas.toBlob(b => resolve(b), 'image/jpeg', 0.92)
+                );
+                const name = `page-${i}.jpg`;
+                p2jBlobs.push({ name, blob });
 
-    if (!mpdfFiles.length) {
-        wrap.classList.add('hidden');
-        return;
-    }
-    wrap.classList.remove('hidden');
-    countEl.textContent = `(${mpdfFiles.length} file${mpdfFiles.length > 1 ? 's' : ''})`;
+                const card = document.createElement('div');
+                card.className = 'img-card';
+                const url = URL.createObjectURL(blob);
+                card.innerHTML = `
+                    <img src="${url}" alt="${name}">
+                    <div class="img-card-foot">
+                        <span class="img-name" title="${name}">${name}</span>
+                        <button class="dl-one" title="Download"><i class="fas fa-download"></i></button>
+                    </div>
+                `;
+                card.querySelector('.dl-one').onclick = () => saveAs(blob, name);
+                grid.appendChild(card);
 
-    mpdfFiles.forEach((f, i) => {
-        const li = document.createElement('li');
-        li.className = 'merge-file-item';
-        li.draggable = true;
-        li.dataset.index = i;
-
-        const grip = document.createElement('span');
-        grip.className = 'merge-grip';
-        grip.innerHTML = '<i class="fas fa-grip-vertical"></i>';
-
-        const name = document.createElement('span');
-        name.className = 'merge-file-name';
-        name.textContent = f.name;
-
-        const size = document.createElement('span');
-        size.className = 'merge-file-size';
-        size.textContent = (f.size / 1024).toFixed(1) + ' KB';
-
-        const removeBtn = document.createElement('button');
-        removeBtn.className = 'merge-remove-btn';
-        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
-        removeBtn.onclick = () => { mpdfFiles.splice(i, 1); renderMpdfList(); };
-
-        li.appendChild(grip);
-        li.appendChild(name);
-        li.appendChild(size);
-        li.appendChild(removeBtn);
-
-        // Drag events for reordering
-        li.addEventListener('dragstart', e => { mpdfDragIdx = i; li.classList.add('dragging'); });
-        li.addEventListener('dragend', () => { li.classList.remove('dragging'); mpdfDragIdx = null; });
-        li.addEventListener('dragover', e => { e.preventDefault(); li.classList.add('drag-over'); });
-        li.addEventListener('dragleave', () => { li.classList.remove('drag-over'); });
-        li.addEventListener('drop', e => {
-            e.preventDefault();
-            li.classList.remove('drag-over');
-            if (mpdfDragIdx !== null && mpdfDragIdx !== i) {
-                const moved = mpdfFiles.splice(mpdfDragIdx, 1)[0];
-                mpdfFiles.splice(i, 0, moved);
-                renderMpdfList();
+                canvas.width = 0;
+                canvas.height = 0;
             }
-        });
 
-        list.appendChild(li);
-    });
+            progress('p2j-progress-fill', 'p2j-status', 100,
+                `Done - ${total} page${total > 1 ? 's' : ''} converted.`);
+            document.getElementById('p2j-preview').classList.remove('hidden');
 
-    // Hide result if list changed after a merge
-    document.getElementById('mpdf-result').classList.add('hidden');
-    mpdfBlob = null;
+        } catch (err) {
+            console.error(err);
+            progress('p2j-progress-fill', 'p2j-status', 100, 'Something went wrong: ' + err.message);
+        }
+    }
+
+    document.getElementById('p2j-download-all-btn').onclick = async () => {
+        if (!p2jBlobs.length) return;
+        if (p2jBlobs.length === 1) { saveAs(p2jBlobs[0].blob, p2jBlobs[0].name); return; }
+        const zip = new JSZip();
+        p2jBlobs.forEach(p => zip.file(p.name, p.blob));
+        const z = await zip.generateAsync({ type: 'blob' });
+        saveAs(z, 'pdf-pages.zip');
+    };
+
+    function resetP2j() {
+        p2jBlobs = [];
+        document.getElementById('p2j-input').value = '';
+        document.getElementById('p2j-preview').classList.add('hidden');
+        document.getElementById('p2j-results').innerHTML = '';
+        hideProgress('p2j-progress-fill');
+    }
 }
 
-document.getElementById('mpdf-merge-btn').onclick = async () => {
-    if (mpdfFiles.length < 2) { alert('Please select at least 2 PDF files to merge.'); return; }
+// ===================================================
+// 5) JPG TO PDF
+// ===================================================
+if (document.getElementById('j2p-drop-zone')) {
+    let j2pFiles = [];
 
-    const { PDFDocument } = PDFLib;
-    progress('mpdf-progress-fill', 'mpdf-status', 5, 'Starting merge...');
-    document.getElementById('mpdf-result').classList.add('hidden');
+    setupDrop('j2p-drop-zone', 'j2p-input', handleJ2p);
 
-    try {
-        const merged = await PDFDocument.create();
-        let totalPages = 0;
+    async function handleJ2p(fileList) {
+        const files = Array.from(fileList).filter(f => f.type === 'image/jpeg');
+        if (!files.length) { alert('Please pick JPG/JPEG files.'); return; }
 
-        for (let i = 0; i < mpdfFiles.length; i++) {
-            const pct = Math.round(10 + (i / mpdfFiles.length) * 80);
-            progress('mpdf-progress-fill', 'mpdf-status', pct, `Processing file ${i + 1} of ${mpdfFiles.length}...`);
+        const info = files.length === 1
+            ? files[0]
+            : { name: `${files.length} JPG files`, size: files.reduce((a, f) => a + f.size, 0) };
+        showFileInfo('j2p-file-info', info, resetJ2p);
 
-            const buf = await mpdfFiles[i].arrayBuffer();
-            const src = await PDFDocument.load(buf);
-            const pages = await merged.copyPages(src, src.getPageIndices());
-            pages.forEach(p => merged.addPage(p));
-            totalPages += pages.length;
+        progress('j2p-progress-fill', 'j2p-status', 5, 'Reading images...');
+        document.getElementById('j2p-preview').classList.add('hidden');
+
+        j2pFiles = files;
+        const grid = document.getElementById('j2p-results');
+        grid.innerHTML = '';
+
+        for (let i = 0; i < files.length; i++) {
+            progress('j2p-progress-fill', 'j2p-status',
+                Math.round(((i + 1) / files.length) * 90),
+                `Loading image ${i + 1} of ${files.length}...`
+            );
+
+            const url = URL.createObjectURL(files[i]);
+            const card = document.createElement('div');
+            card.className = 'img-card';
+            card.innerHTML = `
+                <img src="${url}" alt="Page ${i + 1}">
+                <div class="img-card-foot">
+                    <span class="img-name" title="${files[i].name}">Page ${i + 1}</span>
+                </div>
+            `;
+            grid.appendChild(card);
         }
 
-        progress('mpdf-progress-fill', 'mpdf-status', 95, 'Saving merged PDF...');
-        const pdfBytes = await merged.save();
-        mpdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
-
-        progress('mpdf-progress-fill', 'mpdf-status', 100,
-            `Done - ${mpdfFiles.length} files merged, ${totalPages} total pages.`);
-
-        document.getElementById('mpdf-result-info').textContent =
-            `${mpdfFiles.length} PDFs combined into ${totalPages} pages (${(mpdfBlob.size / 1024).toFixed(1)} KB)`;
-        document.getElementById('mpdf-result').classList.remove('hidden');
-
-    } catch (err) {
-        console.error(err);
-        progress('mpdf-progress-fill', 'mpdf-status', 100, 'Something went wrong: ' + err.message);
+        progress('j2p-progress-fill', 'j2p-status', 100,
+            `${files.length} image${files.length > 1 ? 's' : ''} ready. Click Download PDF.`);
+        document.getElementById('j2p-preview').classList.remove('hidden');
     }
-};
 
-document.getElementById('mpdf-download-btn').onclick = () => {
-    if (!mpdfBlob) return;
-    saveAs(mpdfBlob, 'merged.pdf');
-};
+    document.getElementById('j2p-download-btn').onclick = async () => {
+        if (!j2pFiles.length) return;
 
-function resetMpdf() {
-    mpdfFiles = [];
-    mpdfBlob = null;
-    document.getElementById('mpdf-input').value = '';
-    document.getElementById('mpdf-file-list').classList.add('hidden');
-    document.getElementById('mpdf-sortable').innerHTML = '';
-    document.getElementById('mpdf-result').classList.add('hidden');
-    hideProgress('mpdf-progress-fill');
+        progress('j2p-progress-fill', 'j2p-status', 10, 'Building PDF...');
+        const { jsPDF } = window.jspdf;
+
+        let pdf = null;
+
+        for (let i = 0; i < j2pFiles.length; i++) {
+            progress('j2p-progress-fill', 'j2p-status',
+                10 + Math.round(((i + 1) / j2pFiles.length) * 85),
+                `Adding page ${i + 1} of ${j2pFiles.length}...`
+            );
+
+            const imgData = await readFileAsDataURL(j2pFiles[i]);
+            const dims = await getImageDimensions(imgData);
+
+            const orientation = dims.width > dims.height ? 'landscape' : 'portrait';
+            const pageWidth = orientation === 'landscape' ? 297 : 210;
+            const pageHeight = orientation === 'landscape' ? 210 : 297;
+
+            const margin = 0;
+            const maxW = pageWidth - margin * 2;
+            const maxH = pageHeight - margin * 2;
+            const ratio = Math.min(maxW / dims.width, maxH / dims.height);
+            const w = dims.width * ratio;
+            const h = dims.height * ratio;
+            const x = (pageWidth - w) / 2;
+            const y = (pageHeight - h) / 2;
+
+            if (i === 0) {
+                pdf = new jsPDF({ orientation, unit: 'mm', format: 'a4' });
+            } else {
+                pdf.addPage('a4', orientation);
+            }
+            pdf.addImage(imgData, 'JPEG', x, y, w, h);
+        }
+
+        progress('j2p-progress-fill', 'j2p-status', 100, 'Done!');
+        pdf.save('combined.pdf');
+    };
+
+    function resetJ2p() {
+        j2pFiles = [];
+        document.getElementById('j2p-input').value = '';
+        document.getElementById('j2p-preview').classList.add('hidden');
+        document.getElementById('j2p-results').innerHTML = '';
+        hideProgress('j2p-progress-fill');
+    }
+}
+
+// ===================================================
+// 6) PDF TO WORD
+// ===================================================
+if (document.getElementById('p2w-drop-zone')) {
+    let p2wText = '';
+
+    setupDrop('p2w-drop-zone', 'p2w-input', files => handleP2w(files[0]));
+
+    async function handleP2w(file) {
+        if (!file || file.type !== 'application/pdf') { alert('Please pick a PDF file.'); return; }
+
+        showFileInfo('p2w-file-info', file, resetP2w);
+        progress('p2w-progress-fill', 'p2w-status', 5, 'Loading PDF...');
+        document.getElementById('p2w-preview').classList.add('hidden');
+
+        try {
+            const buf = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+            const total = pdf.numPages;
+            const allText = [];
+
+            let hasTextLayer = false;
+            for (let i = 1; i <= total; i++) {
+                progress('p2w-progress-fill', 'p2w-status',
+                    Math.round((i / total) * 50),
+                    `Extracting text from page ${i} of ${total}...`
+                );
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                const pageText = content.items.map(item => item.str).join(' ').trim();
+                if (pageText) { hasTextLayer = true; allText.push(pageText); }
+            }
+
+            if (!hasTextLayer) {
+                allText.length = 0;
+                for (let i = 1; i <= total; i++) {
+                    progress('p2w-progress-fill', 'p2w-status',
+                        Math.round((i / total) * 40),
+                        `Rendering page ${i} of ${total} for OCR...`
+                    );
+                    const page = await pdf.getPage(i);
+                    const scale = 2;
+                    const viewport = page.getViewport({ scale });
+                    const canvas = document.createElement('canvas');
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+                    await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+
+                    progress('p2w-progress-fill', 'p2w-status',
+                        40 + Math.round((i / total) * 55),
+                        `OCR scanning page ${i} of ${total}...`
+                    );
+                    const imgData = canvas.toDataURL('image/png');
+                    const result = await Tesseract.recognize(imgData, 'hin+eng');
+                    const lines = result.data.text.trim();
+                    if (lines) allText.push(lines);
+                    canvas.width = 0; canvas.height = 0;
+                }
+            }
+
+            if (!allText.length) {
+                progress('p2w-progress-fill', 'p2w-status', 100, 'No text could be extracted from this PDF.');
+                return;
+            }
+
+            p2wText = allText.join('\n\n');
+            const preview = p2wText.length > 3000 ? p2wText.substring(0, 3000) + '\n\n... (preview truncated)' : p2wText;
+            document.getElementById('p2w-text-preview').textContent = preview;
+            progress('p2w-progress-fill', 'p2w-status', 100, `Done - ${total} pages extracted.`);
+            document.getElementById('p2w-preview').classList.remove('hidden');
+
+        } catch (err) {
+            console.error(err);
+            progress('p2w-progress-fill', 'p2w-status', 100, 'Something went wrong: ' + err.message);
+        }
+    }
+
+    document.getElementById('p2w-download-btn').onclick = () => {
+        if (!p2wText) return;
+        const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>Converted Document</title>
+<style>body{font-family:Calibri,sans-serif;font-size:12pt;line-height:1.8;padding:40px 60px}p{margin-bottom:12px}</style>
+</head><body>${p2wText.split('\n').map(line => '<p>' + line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</p>').join('')}</body></html>`;
+        saveAs(new Blob(['\ufeff' + html], { type: 'application/msword' }), 'converted.doc');
+    };
+
+    function resetP2w() {
+        p2wText = '';
+        document.getElementById('p2w-input').value = '';
+        document.getElementById('p2w-preview').classList.add('hidden');
+        hideProgress('p2w-progress-fill');
+    }
+}
+
+// ===================================================
+// 7) WORD TO PDF
+// ===================================================
+if (document.getElementById('w2p-drop-zone')) {
+    let w2pHtml = '';
+
+    setupDrop('w2p-drop-zone', 'w2p-input', files => handleW2p(files[0]));
+
+    async function handleW2p(file) {
+        if (!file) { alert('Please pick a Word file.'); return; }
+        const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+        if (ext !== '.docx' && ext !== '.doc') { alert('Please pick a .docx file.'); return; }
+
+        showFileInfo('w2p-file-info', file, resetW2p);
+        progress('w2p-progress-fill', 'w2p-status', 10, 'Reading Word document...');
+        document.getElementById('w2p-preview').classList.add('hidden');
+
+        try {
+            const buf = await file.arrayBuffer();
+            progress('w2p-progress-fill', 'w2p-status', 40, 'Converting to viewable format...');
+
+            const result = await mammoth.convertToHtml({ arrayBuffer: buf });
+            w2pHtml = result.value;
+
+            const previewEl = document.getElementById('w2p-html-preview');
+            previewEl.innerHTML = w2pHtml;
+
+            progress('w2p-progress-fill', 'w2p-status', 100, 'Done! Preview shown below.');
+            document.getElementById('w2p-preview').classList.remove('hidden');
+
+        } catch (err) {
+            console.error(err);
+            progress('w2p-progress-fill', 'w2p-status', 100, 'Something went wrong: ' + err.message);
+        }
+    }
+
+    document.getElementById('w2p-download-btn').onclick = async () => {
+        if (!w2pHtml) return;
+        progress('w2p-progress-fill', 'w2p-status', 10, 'Building PDF...');
+
+        const container = document.getElementById('w2p-html-preview');
+        const origWidth = container.style.width;
+        container.style.width = '700px';
+
+        try {
+            const canvas = await html2canvas(container, { scale: 2, useCORS: true, windowWidth: 700 });
+            container.style.width = origWidth;
+
+            const { jsPDF } = window.jspdf;
+            const pageWidth = 210;
+            const pageHeight = 297;
+            const margin = 10;
+            const contentWidth = pageWidth - margin * 2;
+            const imgHeight = (canvas.height * contentWidth) / canvas.width;
+            const contentHeight = pageHeight - margin * 2;
+
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            let y = 0;
+            let page = 0;
+
+            while (y < imgHeight) {
+                if (page > 0) pdf.addPage();
+
+                const sourceY = (y / imgHeight) * canvas.height;
+                const sourceH = Math.min((contentHeight / imgHeight) * canvas.height, canvas.height - sourceY);
+                const destH = (sourceH / canvas.height) * imgHeight;
+
+                const pageCanvas = document.createElement('canvas');
+                pageCanvas.width = canvas.width;
+                pageCanvas.height = Math.ceil(sourceH);
+                const ctx = pageCanvas.getContext('2d');
+                ctx.drawImage(canvas, 0, sourceY, canvas.width, sourceH, 0, 0, canvas.width, sourceH);
+
+                const pageImg = pageCanvas.toDataURL('image/jpeg', 0.95);
+                pdf.addImage(pageImg, 'JPEG', margin, margin, contentWidth, destH);
+
+                y += contentHeight;
+                page++;
+            }
+
+            progress('w2p-progress-fill', 'w2p-status', 100, 'Done!');
+            pdf.save('converted.pdf');
+        } catch (err) {
+            container.style.width = origWidth;
+            console.error(err);
+            progress('w2p-progress-fill', 'w2p-status', 100, 'Something went wrong: ' + err.message);
+        }
+    };
+
+    function resetW2p() {
+        w2pHtml = '';
+        document.getElementById('w2p-input').value = '';
+        document.getElementById('w2p-preview').classList.add('hidden');
+        document.getElementById('w2p-html-preview').innerHTML = '';
+        hideProgress('w2p-progress-fill');
+    }
+}
+
+// ===================================================
+// 8) CSV TO EXCEL
+// ===================================================
+if (document.getElementById('c2e-drop-zone')) {
+    let c2eRows = [];
+
+    setupDrop('c2e-drop-zone', 'c2e-input', files => handleC2e(files[0]));
+
+    async function handleC2e(file) {
+        if (!file) { alert('Please pick a CSV file.'); return; }
+
+        showFileInfo('c2e-file-info', file, resetC2e);
+        progress('c2e-progress-fill', 'c2e-status', 10, 'Reading CSV...');
+        document.getElementById('c2e-preview').classList.add('hidden');
+
+        try {
+            const text = await file.text();
+            progress('c2e-progress-fill', 'c2e-status', 40, 'Parsing data...');
+
+            const rows = parseCSV(text);
+            if (!rows.length) {
+                progress('c2e-progress-fill', 'c2e-status', 100, 'No data found in CSV file.');
+                return;
+            }
+
+            const maxCols = Math.max(...rows.map(r => r.length));
+            rows.forEach(r => { while (r.length < maxCols) r.push(''); });
+
+            const table = document.getElementById('c2e-table');
+            table.innerHTML = '';
+            rows.slice(0, 50).forEach((row, idx) => {
+                const tr = document.createElement('tr');
+                row.forEach(c => {
+                    const el = document.createElement(idx === 0 ? 'th' : 'td');
+                    el.textContent = c;
+                    tr.appendChild(el);
+                });
+                table.appendChild(tr);
+            });
+            if (rows.length > 50) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = maxCols;
+                td.style.textAlign = 'center';
+                td.style.color = '#999';
+                td.textContent = `+ ${rows.length - 50} more rows`;
+                tr.appendChild(td);
+                table.appendChild(tr);
+            }
+
+            c2eRows = rows;
+            progress('c2e-progress-fill', 'c2e-status', 100, `Done - ${rows.length} rows found.`);
+            document.getElementById('c2e-preview').classList.remove('hidden');
+
+        } catch (err) {
+            console.error(err);
+            progress('c2e-progress-fill', 'c2e-status', 100, 'Something went wrong: ' + err.message);
+        }
+    }
+
+    document.getElementById('c2e-download-btn').onclick = () => {
+        if (!c2eRows.length) return;
+        const ws = XLSX.utils.aoa_to_sheet(c2eRows);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+        XLSX.writeFile(wb, 'converted.xlsx');
+    };
+
+    function resetC2e() {
+        c2eRows = [];
+        document.getElementById('c2e-input').value = '';
+        document.getElementById('c2e-preview').classList.add('hidden');
+        document.getElementById('c2e-table').innerHTML = '';
+        hideProgress('c2e-progress-fill');
+    }
+}
+
+// ===================================================
+// 9) PDF TO EXCEL
+// ===================================================
+if (document.getElementById('p2e-drop-zone')) {
+    let p2eRows = [];
+
+    setupDrop('p2e-drop-zone', 'p2e-input', files => handleP2e(files[0]));
+
+    async function handleP2e(file) {
+        if (!file || file.type !== 'application/pdf') { alert('Please pick a PDF file.'); return; }
+
+        showFileInfo('p2e-file-info', file, resetP2e);
+        progress('p2e-progress-fill', 'p2e-status', 5, 'Loading PDF...');
+        document.getElementById('p2e-preview').classList.add('hidden');
+
+        try {
+            const buf = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+            const total = pdf.numPages;
+            const allText = [];
+
+            for (let i = 1; i <= total; i++) {
+                progress('p2e-progress-fill', 'p2e-status',
+                    Math.round((i / total) * 40),
+                    `Rendering page ${i} of ${total} as image...`
+                );
+
+                const page = await pdf.getPage(i);
+                const scale = 2;
+                const viewport = page.getViewport({ scale });
+                const canvas = document.createElement('canvas');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+
+                progress('p2e-progress-fill', 'p2e-status',
+                    40 + Math.round((i / total) * 50),
+                    `OCR scanning page ${i} of ${total}...`
+                );
+
+                const imgData = canvas.toDataURL('image/png');
+                const result = await Tesseract.recognize(imgData, 'hin+eng', {
+                    logger: m => {
+                        if (m.status === 'recognizing text') {
+                            const overallPct = 40 + Math.round(((i - 1 + m.progress) / total) * 50);
+                            progress('p2e-progress-fill', 'p2e-status', overallPct,
+                                `OCR page ${i}/${total} - ${Math.round(m.progress * 100)}%`);
+                        }
+                    }
+                });
+
+                const lines = result.data.text.split('\n').map(l => l.trim()).filter(Boolean);
+                lines.forEach(line => allText.push(line));
+                canvas.width = 0; canvas.height = 0;
+            }
+
+            if (!allText.length) {
+                progress('p2e-progress-fill', 'p2e-status', 100, 'No text could be recognized in this PDF.');
+                return;
+            }
+
+            const rows = allText.map(line => {
+                if (line.includes('\t')) return line.split('\t').map(c => c.trim());
+                const parts = line.split(/\s{2,}/).map(c => c.trim()).filter(Boolean);
+                return parts.length > 1 ? parts : [line];
+            });
+
+            const maxCols = Math.max(...rows.map(r => r.length));
+            rows.forEach(r => { while (r.length < maxCols) r.push(''); });
+
+            const table = document.getElementById('p2e-table');
+            table.innerHTML = '';
+            rows.slice(0, 80).forEach((row, idx) => {
+                const tr = document.createElement('tr');
+                row.forEach(c => {
+                    const el = document.createElement(idx === 0 ? 'th' : 'td');
+                    el.textContent = c;
+                    tr.appendChild(el);
+                });
+                table.appendChild(tr);
+            });
+            if (rows.length > 80) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = maxCols;
+                td.style.textAlign = 'center';
+                td.style.color = '#999';
+                td.textContent = `+ ${rows.length - 80} more rows`;
+                tr.appendChild(td);
+                table.appendChild(tr);
+            }
+
+            p2eRows = rows;
+            progress('p2e-progress-fill', 'p2e-status', 100, `Done - ${rows.length} rows extracted from ${total} pages.`);
+            document.getElementById('p2e-preview').classList.remove('hidden');
+
+        } catch (err) {
+            console.error(err);
+            progress('p2e-progress-fill', 'p2e-status', 100, 'Something went wrong: ' + err.message);
+        }
+    }
+
+    document.getElementById('p2e-download-btn').onclick = () => {
+        if (!p2eRows.length) return;
+        const ws = XLSX.utils.aoa_to_sheet(p2eRows);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+        XLSX.writeFile(wb, 'converted.xlsx');
+    };
+
+    function resetP2e() {
+        p2eRows = [];
+        document.getElementById('p2e-input').value = '';
+        document.getElementById('p2e-preview').classList.add('hidden');
+        document.getElementById('p2e-table').innerHTML = '';
+        hideProgress('p2e-progress-fill');
+    }
+}
+
+// ===================================================
+// 10) EXCEL TO PDF
+// ===================================================
+if (document.getElementById('e2p-drop-zone')) {
+    let e2pData = [];
+
+    setupDrop('e2p-drop-zone', 'e2p-input', files => handleE2p(files[0]));
+
+    async function handleE2p(file) {
+        if (!file) { alert('Please pick an Excel file.'); return; }
+
+        showFileInfo('e2p-file-info', file, resetE2p);
+        progress('e2p-progress-fill', 'e2p-status', 10, 'Reading Excel file...');
+        document.getElementById('e2p-preview').classList.add('hidden');
+
+        try {
+            const buf = await file.arrayBuffer();
+            progress('e2p-progress-fill', 'e2p-status', 50, 'Parsing spreadsheet...');
+
+            const wb = XLSX.read(buf, { type: 'array' });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+            if (!data.length) {
+                progress('e2p-progress-fill', 'e2p-status', 100, 'No data found in Excel file.');
+                return;
+            }
+
+            const maxCols = Math.max(...data.map(r => (Array.isArray(r) ? r : [r]).length));
+            const normalized = data.map(r => {
+                const arr = Array.isArray(r) ? r : [r];
+                while (arr.length < maxCols) arr.push('');
+                return arr.map(c => (c != null ? String(c) : ''));
+            });
+
+            const table = document.getElementById('e2p-table');
+            table.innerHTML = '';
+            normalized.slice(0, 50).forEach((row, idx) => {
+                const tr = document.createElement('tr');
+                row.forEach(c => {
+                    const el = document.createElement(idx === 0 ? 'th' : 'td');
+                    el.textContent = c;
+                    tr.appendChild(el);
+                });
+                table.appendChild(tr);
+            });
+            if (normalized.length > 50) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = maxCols;
+                td.style.textAlign = 'center';
+                td.style.color = '#999';
+                td.textContent = `+ ${normalized.length - 50} more rows`;
+                tr.appendChild(td);
+                table.appendChild(tr);
+            }
+
+            e2pData = normalized;
+            progress('e2p-progress-fill', 'e2p-status', 100,
+                `Done - ${data.length} rows, ${wb.SheetNames.length} sheet(s).`);
+            document.getElementById('e2p-preview').classList.remove('hidden');
+
+        } catch (err) {
+            console.error(err);
+            progress('e2p-progress-fill', 'e2p-status', 100, 'Something went wrong: ' + err.message);
+        }
+    }
+
+    document.getElementById('e2p-download-btn').onclick = () => {
+        if (!e2pData.length) return;
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('l', 'mm', 'a4');
+
+        const head = e2pData.length > 0 ? [e2pData[0]] : [];
+        const body = e2pData.slice(1);
+
+        pdf.autoTable({
+            head: head,
+            body: body,
+            startY: 10,
+            styles: { fontSize: 8, cellPadding: 2 },
+            headStyles: { fillColor: [41, 128, 185] },
+            theme: 'grid'
+        });
+
+        pdf.save('converted.pdf');
+    };
+
+    function resetE2p() {
+        e2pData = [];
+        document.getElementById('e2p-input').value = '';
+        document.getElementById('e2p-preview').classList.add('hidden');
+        document.getElementById('e2p-table').innerHTML = '';
+        hideProgress('e2p-progress-fill');
+    }
+}
+
+// ===================================================
+// 11) MERGE PDF
+// ===================================================
+if (document.getElementById('mpdf-drop-zone')) {
+    let mpdfFiles = [];
+    let mpdfBlob = null;
+    let mpdfDragIdx = null;
+
+    setupDrop('mpdf-drop-zone', 'mpdf-input', files => addMpdfFiles(files));
+
+    function addMpdfFiles(files) {
+        const pdfs = Array.from(files).filter(f => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'));
+        if (!pdfs.length) { alert('Please select PDF files.'); return; }
+        mpdfFiles.push(...pdfs);
+        renderMpdfList();
+    }
+
+    function renderMpdfList() {
+        const list = document.getElementById('mpdf-sortable');
+        const wrap = document.getElementById('mpdf-file-list');
+        const countEl = document.getElementById('mpdf-count');
+        list.innerHTML = '';
+
+        if (!mpdfFiles.length) {
+            wrap.classList.add('hidden');
+            document.getElementById('mpdf-merge-btn').style.display = 'none';
+            return;
+        }
+        wrap.classList.remove('hidden');
+        countEl.textContent = `(${mpdfFiles.length} file${mpdfFiles.length > 1 ? 's' : ''})`;
+        document.getElementById('mpdf-merge-btn').style.display = mpdfFiles.length >= 2 ? '' : 'none';
+
+        mpdfFiles.forEach((f, i) => {
+            const li = document.createElement('li');
+            li.className = 'merge-file-item';
+            li.draggable = true;
+            li.dataset.index = i;
+
+            const grip = document.createElement('span');
+            grip.className = 'merge-grip';
+            grip.innerHTML = '<i class="fas fa-grip-vertical"></i>';
+
+            const name = document.createElement('span');
+            name.className = 'merge-file-name';
+            name.textContent = f.name;
+
+            const size = document.createElement('span');
+            size.className = 'merge-file-size';
+            size.textContent = (f.size / 1024).toFixed(1) + ' KB';
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'merge-remove-btn';
+            removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+            removeBtn.onclick = () => { mpdfFiles.splice(i, 1); renderMpdfList(); };
+
+            li.appendChild(grip);
+            li.appendChild(name);
+            li.appendChild(size);
+            li.appendChild(removeBtn);
+
+            li.addEventListener('dragstart', () => { mpdfDragIdx = i; li.classList.add('dragging'); });
+            li.addEventListener('dragend', () => { li.classList.remove('dragging'); mpdfDragIdx = null; });
+            li.addEventListener('dragover', e => { e.preventDefault(); li.classList.add('drag-over'); });
+            li.addEventListener('dragleave', () => { li.classList.remove('drag-over'); });
+            li.addEventListener('drop', e => {
+                e.preventDefault();
+                li.classList.remove('drag-over');
+                if (mpdfDragIdx !== null && mpdfDragIdx !== i) {
+                    const moved = mpdfFiles.splice(mpdfDragIdx, 1)[0];
+                    mpdfFiles.splice(i, 0, moved);
+                    renderMpdfList();
+                }
+            });
+
+            list.appendChild(li);
+        });
+
+        document.getElementById('mpdf-result').classList.add('hidden');
+        mpdfBlob = null;
+    }
+
+    document.getElementById('mpdf-merge-btn').onclick = async () => {
+        if (mpdfFiles.length < 2) { alert('Please select at least 2 PDF files to merge.'); return; }
+
+        const { PDFDocument } = PDFLib;
+        progress('mpdf-progress-fill', 'mpdf-status', 5, 'Starting merge...');
+        document.getElementById('mpdf-result').classList.add('hidden');
+
+        try {
+            const merged = await PDFDocument.create();
+            let totalPages = 0;
+
+            for (let i = 0; i < mpdfFiles.length; i++) {
+                const pct = Math.round(10 + (i / mpdfFiles.length) * 80);
+                progress('mpdf-progress-fill', 'mpdf-status', pct, `Processing file ${i + 1} of ${mpdfFiles.length}...`);
+
+                const buf = await mpdfFiles[i].arrayBuffer();
+                const src = await PDFDocument.load(buf);
+                const pages = await merged.copyPages(src, src.getPageIndices());
+                pages.forEach(p => merged.addPage(p));
+                totalPages += pages.length;
+            }
+
+            progress('mpdf-progress-fill', 'mpdf-status', 95, 'Saving merged PDF...');
+            const pdfBytes = await merged.save();
+            mpdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+
+            progress('mpdf-progress-fill', 'mpdf-status', 100,
+                `Done - ${mpdfFiles.length} files merged, ${totalPages} total pages.`);
+
+            document.getElementById('mpdf-result-info').textContent =
+                `${mpdfFiles.length} PDFs combined into ${totalPages} pages (${(mpdfBlob.size / 1024).toFixed(1)} KB)`;
+            document.getElementById('mpdf-result').classList.remove('hidden');
+
+        } catch (err) {
+            console.error(err);
+            progress('mpdf-progress-fill', 'mpdf-status', 100, 'Something went wrong: ' + err.message);
+        }
+    };
+
+    document.getElementById('mpdf-download-btn').onclick = () => {
+        if (!mpdfBlob) return;
+        saveAs(mpdfBlob, 'merged.pdf');
+    };
 }
