@@ -19,10 +19,10 @@ document.addEventListener('click', () => {
 
 // Highlight active nav link based on current page
 (function () {
-    const page = location.pathname.split('/').pop() || 'index.html';
+    const seg = location.pathname.replace(/\/+$/, '').split('/').pop() || '';
     document.querySelectorAll('.nav-links a.nav-tool').forEach(a => {
-        const href = a.getAttribute('href');
-        if (href === page) {
+        const href = a.getAttribute('href').replace(/\/+$/, '').split('/').pop() || '';
+        if (href === seg) {
             a.classList.add('active');
             const dd = a.closest('.nav-dropdown');
             if (dd) dd.querySelector('.nav-dropdown-toggle').classList.add('has-active');

@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://fileflipr.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://fileflipr.com/pdf-to-csv-converter.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://fileflipr.com/image-to-text-ocr.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://fileflipr.com/jpg-to-png-converter.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://fileflipr.com/pdf-to-jpg-converter.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://fileflipr.com/jpg-to-pdf-converter.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://fileflipr.com/pdf-to-word-converter.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://fileflipr.com/word-to-pdf-converter.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://fileflipr.com/csv-to-excel-converter.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://fileflipr.com/pdf-to-excel-converter.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://fileflipr.com/excel-to-pdf-converter.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://fileflipr.com/merge-pdf.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileflipr.com/pdf-to-csv-converter</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://fileflipr.com/image-to-text-ocr</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://fileflipr.com/jpg-to-png-converter</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://fileflipr.com/pdf-to-jpg-converter</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileflipr.com/jpg-to-pdf-converter</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileflipr.com/pdf-to-word-converter</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileflipr.com/word-to-pdf-converter</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileflipr.com/csv-to-excel-converter</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileflipr.com/pdf-to-excel-converter</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileflipr.com/excel-to-pdf-converter</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileflipr.com/merge-pdf</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
 
