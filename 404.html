@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - FileFlipr</title>
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <script>
+    // Redirect old .html URLs to clean URLs
+    (function () {
+        var path = location.pathname;
+        if (path.endsWith('.html') && path !== '/404.html') {
+            var clean = path.replace(/\.html$/, '');
+            location.replace(clean + location.search + location.hash);
+            return;
+        }
+    })();
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f8fafc; color: #333; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; text-align: center; }
+        .box { max-width: 460px; }
+        h1 { font-size: 4rem; color: #4361ee; margin-bottom: 8px; }
+        p { font-size: 1.1rem; color: #555; margin-bottom: 20px; }
+        a { display: inline-block; padding: 12px 28px; background: #4361ee; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; transition: background .2s; }
+        a:hover { background: #3a56d4; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>404</h1>
+        <p>This page doesn't exist. The tool you're looking for may have moved.</p>
+        <a href="/">Back to FileFlipr</a>
+    </div>
+</body>
+</html>
